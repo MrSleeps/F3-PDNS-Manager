@@ -5,12 +5,12 @@ UI=../framework/views/
 AUTOLOAD=../framework/controllers/|../framework/models/
 CASELESS=true
 DB_DETS = "mysql:host=localhost;port=3306;dbname=<<YOUR DB NAME>>"
-DB_HOST        = localhost
-DB_NAME        = <<YOUR DB NAME>>
-DB_USER        = <<YOUR DB PASSWORD>>
-DB_PSWD        = <<YOURPASSWORD>>
-DB_PORT        = 3306
-DB_SOCK        = ""
+DB_HOST = localhost
+DB_NAME = <<YOUR DB NAME>>
+DB_USER = <<YOUR DB USERNAME>>
+DB_PSWD = <<YOUR DB PASSWORD>>
+DB_PORT = 3306
+DB_SOCK = ""
 CACHE=true
 TEMP=../framework/tmp/
 DNSVERSION = 1
@@ -30,10 +30,7 @@ SMTPDEBUG = 0
 SMTPPWRESETFROMNAME = "Password Reset"
 SMTPPWRESETFROMEMAIL = password-reset@your.do.main
 
-
 DEFAULTSOAREFRESH = "7200"
 DEFAULTSOAEXPIRE = "86400"
 DEFAULTSOARETRY = "3600"
 DEFAULTSOATTL = "3600"
-
-
