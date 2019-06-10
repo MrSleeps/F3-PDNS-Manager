@@ -1,0 +1,6 @@
+{
+    "require": {
+        "phpmailer/phpmailer": "^6.0",
+        "lasserafn/php-initial-avatar-generator": "^4.0"
+    }
+}

@@ -1,0 +1,108 @@
+<script type="text/javascript" src="/assets/node_modules/pnotify/dist/iife/PNotify.js"></script>
+<script type="text/javascript" src="/assets/node_modules/pnotify/dist/iife/PNotifyButtons.js"></script>
+<script src="/assets/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+// PNotify.defaults.styling = 'bootstrap4';
+$(document).ready(function() {
+	var stack_center = {"dir1": "down", "dir2": "right", "firstpos1": 25, "firstpos2": ($(window).width()/2 - 150)};
+	PNotify.defaults.styling = 'bootstrap4';
+if (sessionStorage.updateSuccess == "true") {
+PNotify.success({title: 'Success!', text: "User was updated", type: 'error', icon: false , addclass: "stack_center", stack: stack_center });
+sessionStorage.removeItem("updateSuccess");
+}	
+	
+
+
+function saveUserData(callback) {
+	var stack_center = {"dir1": "down", "dir2": "right", "firstpos1": 25, "firstpos2": ($(window).width()/2 - 150)};
+	PNotify.defaults.styling = 'bootstrap4';		
+    var data = {
+		userID: $('#userID').val(),
+        userEmail: $('#userEmailAddress').val(),
+        userFullName: $('#userFullName').val(),
+        userLevel: $('#usersLevel').val(),
+        masterAccount: $('#masterAccount').val(),
+        userMaxDomains: $('#userMaxDomains').val(),
+        userEnabled: $('#userEnabled:checked').val(),
+        userDisabled: $('#userDisabled:checked').val(),
+        csrfToken: $('#csrfToken').text()
+    };
+    
+    $.post(
+        "/ajax/users/update",
+        JSON.stringify(data),
+        function(data) {
+            callback(data.newID);
+        },
+        "json"
+    ).fail(function(response) {
+		PNotify.error({title: 'Error!', text: response.responseText, type: 'error', icon: false , addclass: "stack_center", stack: stack_center });
+});;
+}	
+
+    $('#updateUserButton').click(function(evt){
+		var form = document.getElementById('updateUserForm');
+		
+        if (form.checkValidity() === false) {
+          evt.preventDefault();
+          evt.stopPropagation();
+        } else {
+			evt.preventDefault();
+				saveUserData(function(id) {
+				//$("#updateUserForm").load(location.href + " #updateUserForm");
+					sessionStorage.updateSuccess = "true";
+				location.reload();
+				})				
+		}
+			
+        form.classList.add('was-validated');	
+    });		
+
+    $('#confirmRecordDelete').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget)
+        var recordid = button.data('recordid') // Extract info from data-* attributes
+        var recordname = button.data('recordname')
+        var recordtype = button.data('recordtype')
+        var recordcontent = button.data('recordcontent')
+        var thedomain = button.data('thedomain')
+        var domainid = button.data('domainid')
+        var tablerowid = '#row' + recordid
+        var content = 'Are you sure want to delete the <b>' + recordtype + '</b> record: <b>' + recordname + '</b> which points to <b>' + recordcontent + '</b> ?'
+        var modal = $(this)
+        modal.find('.modal-body').html(content)
+        $("#confirmDelBtn").unbind("click").click(function(e) {
+            var data = {
+                id: recordid,
+                type: recordtype,
+                content: recordcontent,
+                domain: thedomain,
+                name: recordname,
+                domainid: domainid,
+                csrfToken: $('#csrfToken').text()
+            };
+
+            $.ajax({
+                url: '/ajax/records/delete',
+                method: 'POST',
+                data: data
+            }).done(function(data) {
+                $('#confirmRecordDelete').modal('hide');
+                $(tablerowid).closest('tr').remove();
+			PNotify.success({
+                title: 'Record Deleted!',
+                text: 'Your record has been delted',
+                type: 'success',
+                icon: false
+			});					
+            }).fail(function(errorMsg) {
+			PNotify.error({
+                    title: 'Error!',
+                    text: errorMsg.responseText,
+                    type: 'error',
+                    icon: false
+			});					
+            });
+        });
+    });
+});	
+</script>

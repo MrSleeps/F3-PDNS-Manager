@@ -1,0 +1,52 @@
+
+  <script src="/assets/vendor/chart.js/dist/Chart.min.js"></script>
+  <script src="/assets/vendor/chart.js/dist/Chart.extension.js"></script>
+  <script src="/assets/js/argon.min.js?v=1.0.0"></script>
+	<script>
+	   window.onload = function() {
+		var e = document.getElementById("chart-record-types");
+		var recordsChart = new Chart(e, {
+		   type: 'bar',
+			responsive: true,
+		   data: {
+			 labels: {{@BCLABEL | raw}},
+			 datasets: [{
+			   data: {{@BCDATA | raw}},
+						   backgroundColor: [Charts.colors.theme.danger, Charts.colors.theme.warning, Charts.colors.theme.success, Charts.colors.theme.primary, Charts.colors.theme.info,Charts.colors.theme.danger, Charts.colors.theme.warning, Charts.colors.theme.success, Charts.colors.theme.primary, Charts.colors.theme.info,Charts.colors.theme.danger, Charts.colors.theme.warning, Charts.colors.theme.success, Charts.colors.theme.primary, Charts.colors.theme.info],
+						   label: "Dataset 1"
+			 }]
+		   }
+		 })
+	   }
+	   var ztc = document.getElementById("chart-zone-types");
+	   var myChart = new Chart(ztc, {
+		   type: 'pie',
+		responsive: true,
+		   data: {
+			   labels: {{@ZTLABEL | raw}},
+			   datasets: [{
+				   data: {{@ZTDATA | raw}},
+				   backgroundColor: [Charts.colors.theme.danger, Charts.colors.theme.primary],
+				   borderWidth: 1
+			   }]
+		   },
+		   options: {
+			legend: {
+			display: true
+		   }
+		   }
+	   });
+	   var utc = document.getElementById("chart-user-types");
+	   var myChart = new Chart(utc, {
+		   type: 'bar',
+		responsive: true,
+		   data: {
+			   labels: {{@UCLABEL | raw}},
+			   datasets: [{
+				   data: {{@UCDATA | raw}},
+				   backgroundColor: [Charts.colors.theme.danger, Charts.colors.theme.warning, Charts.colors.theme.success, Charts.colors.theme.primary, Charts.colors.theme.info,Charts.colors.theme.danger, Charts.colors.theme.warning, Charts.colors.theme.success, Charts.colors.theme.primary, Charts.colors.theme.info,Charts.colors.theme.danger, Charts.colors.theme.warning, Charts.colors.theme.success, Charts.colors.theme.primary, Charts.colors.theme.info],
+				   borderWidth: 1
+			   }]
+		   }
+	   });	
+	</script>

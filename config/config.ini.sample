@@ -1,0 +1,39 @@
+[globals]
+
+DEBUG=3
+UI=../framework/views/
+AUTOLOAD=../framework/controllers/|../framework/models/
+CASELESS=true
+DB_DETS = "mysql:host=localhost;port=3306;dbname=<<YOUR DB NAME>>"
+DB_HOST        = localhost
+DB_NAME        = <<YOUR DB NAME>>
+DB_USER        = <<YOUR DB PASSWORD>>
+DB_PSWD        = <<YOURPASSWORD>>
+DB_PORT        = 3306
+DB_SOCK        = ""
+CACHE=true
+TEMP=../framework/tmp/
+DNSVERSION = 1
+
+SITENAME = "Your Website Name"
+SITEURL = "https://your.web.site/"
+SITEMASTERUSERID = "1"
+SITEALLOWREGISTER = "1"
+
+SMTPHOST = <<YOUR SMTP SERVER>>
+SMTPAUTH = true
+SMTPUSERNAME = <<YOUR SMTP USERNAME>>
+SMTPPASSWORD = <<YOUR SMTP PASSWORD>>
+SMTPSECURE = tls
+SMTPPORT = 587
+SMTPDEBUG = 0
+SMTPPWRESETFROMNAME = "Password Reset"
+SMTPPWRESETFROMEMAIL = password-reset@your.do.main
+
+
+DEFAULTSOAREFRESH = "7200"
+DEFAULTSOAEXPIRE = "86400"
+DEFAULTSOARETRY = "3600"
+DEFAULTSOATTL = "3600"
+
+

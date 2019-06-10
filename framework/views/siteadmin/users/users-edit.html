@@ -1,0 +1,154 @@
+  <div class="main-content">
+    <!-- Top navbar -->
+<include href="{{@PAGETOPNAV}}" />
+    <!-- Header -->
+    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+      <div class="container-fluid">
+        <div class="header-body">
+          <!-- Card stats -->
+
+        </div>
+      </div>
+    </div>
+    <!-- Page content -->
+    <div class="container-fluid mt--7">
+      <div class="row">
+		  <div class="col-lg-12">
+			<div class="card mb-4">
+        <!-- Card header -->
+		        <div class="card-header">
+          			<h3 class="mb-0">Edit <span id="userEmailText">{{@USEREMAIL}}</span> (User ID: <span id="userIDText">{{@USERID}}</span>)
+       			 </div>
+        <!-- Card body -->
+			  <form id="updateUserForm">
+				  <input type="hidden" name="userID" id="userID" value="{{@USERID}}">					
+        <div class="card-body">
+          <div class="row">
+
+            <div class="col-sm-6 col-md-6 col-lg-3">
+              <div class="form-group">
+                <label for="userEmail" class="form-control-label">Email</label>
+                <input name="userEmail" type="text" class="form-control form-control-alternative" id="userEmailAddress" placeholder="Email" autocomplete="off" data-regex="^.+@[^.]+(\.[^.]+)*$" tabindex="1" value="{{ @USEREMAIL }}">
+              </div>
+            </div>			  
+            <div class="col-sm-6 col-md-6 col-lg-3">
+              <div class="form-group">
+                <label for="userFullName" class="form-control-label">Name</label>
+                <input type="text" class="form-control form-control-alternative" name="userFullName" id="userFullName" placeholder="Users Full Name" autocomplete="off" data-regex="" tabindex="2" value="{{ @USERNAME }}">
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3">
+              <div class="form-group">
+				<label for="userLevel" class="form-control-label">Level</label>
+				<select name="userLevel" class="form-control form-control-alternative" id="usersLevel">
+<repeat group="{{ @USERLEVELS }}" value="{{ @ul }}">
+	<option value="{{@ul.userLevelID}}"<check if="{{@ul.userLevelID == @USERADMINLEVEL}}"><true> selected</true></check>>{{@ul.userLevelDesc}}</option>
+</repeat>		
+				</select>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3">
+              <div class="form-group"> 
+				<label for="masterAccount" class="form-control-label">Master Account</label>
+				<select name="masterAccount" class="form-control form-control-alternative" id="masterAccount">
+<repeat group="{{ @ALLEMAILS }}" value="{{ @ae }}">
+	<option value="{{@ae.userID}}"<check if="{{@ae.userID == @USERID}}"><true> selected</true></check>>{{@ae.userEmail}}</option>
+</repeat>		
+				</select>
+              </div>
+            </div>			  
+          </div>
+          <div class="row">
+            <div class="col-sm-6 col-md-6 col-lg-3">
+              <div class="form-group">
+                <label for="userMaxDomains" class="form-control-label">Max Domains <small>0 = Unlimited</small></label>
+                <input name="userMaxDomains" type="number" class="form-control" id="userMaxDomains" value="{{@USERMAXDOM}}">
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3">
+              <div class="form-group">
+                <label for="userEnabled" class="form-control-label">User Account</label>
+				<div class="btn-group btn-group-toggle btn-group-pill" data-toggle="buttons">
+				  <label class="btn btn-outline-secondary btn-switch-on<check if="{{@USERENABLED == '1'}}"><true> active</true></check>">
+					<input type="radio" name="userEnabled" id="userEnabled" autocomplete="off"<check if="{{@USERENABLED == '1'}}"><true> checked</true></check>> Enabled
+				  </label>
+				  <label class="btn btn-outline-secondary btn-switch-off<check if="{{@USERENABLED == '0'}}"><true> active</true></check>">
+					<input type="radio" name="userDisabled" id="userDisabled" autocomplete="off"<check if="{{@USERENABLED == '0'}}"><true> checked</true></check>> Disabled
+				  </label>
+				</div>
+              </div>
+            </div>
+          </div>			
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+				<button type="button" class="btn btn-primary float-right" id="updateUserButton">Save</button>
+              </div>
+            </div>
+          </div>
+	  </form>
+		  <hr class="my-4" />
+          <h6 class="heading-small text-muted mb-4">Domains</h6>			
+		  <div class="row">
+            <div class="col-sm-12">
+			  <div class="table-responsive">
+				<table class="table table-flush table-sm" id="datatable-records">
+				  <thead class="thead-light">
+					<tr>
+					  <th>ID</th>
+					  <th>Name</th>
+					  <th>Type</th>
+					  <th>Records</th>
+					  <th></th>
+					</tr>
+				  </thead>						  
+				  </tfoot>
+				  <tbody>
+					<repeat group="{{@USERDOMLIST}}" value="{{@dr}}" counter="{{ @ctr }}">
+					  <tr id="row{{@dr.id}}">
+						<td>{{@dr.id}}</td>
+						<td>{{@dr.name}}</td>
+						<td>{{@dr.type}}</td>
+						<td>{{@dr.recordCount}}</td>
+						<td class="text-center"><a href="/domains/edit/{{@dr.id}}" class="btn btn-sm btn-info" role="button"><span class="hidden-md-down">Edit&nbsp;&nbsp;</span><i class="fa fa-edit"></i></a></td>
+					  </tr>
+					</repeat>
+				  </tbody>
+				</table>
+			  </div>
+            </div>
+          </div>	
+        </div>
+      </div>			  
+		  </div>
+		  
+      </div>
+                <div class="col-md-4">
+                  <div class="modal fade" id="confirmRecordDelete" tabindex="-1" role="dialog" aria-labelledby="confirmRecordDelete" aria-hidden="true">
+                    <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+                      <div class="modal-content bg-gradient-danger">
+                        <div class="modal-header">
+                          <h6 class="modal-title" id="modal-title-notification">Your attention is required</h6>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <div class="py-3 text-center">
+                            <i class="fas fa-exclamation-circle fa-5x"></i>
+                            <h4 class="heading mt-4"><span id="modalDomainName"></span></h4>
+                            <p><span id="modalDeleteContent"></span></p>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-white" id="confirmDelBtn">Yes</button>
+                          <button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal">No</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+      <!-- Footer -->
+<include href="{{@PAGEFOOTER}}" />
+    </div>
+  </div>

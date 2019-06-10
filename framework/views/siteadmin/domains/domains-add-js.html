@@ -1,0 +1,127 @@
+<script type="text/javascript" src="/assets/node_modules/pnotify/dist/iife/PNotify.js"></script>
+<script type="text/javascript" src="/assets/node_modules/pnotify/dist/iife/PNotifyButtons.js"></script>
+<script src="/assets/bower_components/select2/dist/js/select2.min.js"></script>
+
+<script>
+$(document).ready(function() {
+	var stack_center = {"dir1": "down", "dir2": "right", "firstpos1": 25, "firstpos2": ($(window).width()/2 - 150)};
+	PNotify.defaults.styling = 'bootstrap4';	
+var placeholder = $(this).data('placeholder') || 'Choose a Type';
+    $('#addDomainAdminAccount').select2({
+
+		width: 'style',
+        placeholder: placeholder
+    });
+	
+    $('#addSlaveDomainAdminAccount').select2({
+
+		width: 'style',
+        placeholder: placeholder
+    });
+	
+$('.btn-switch-on').click(function(){
+	$('#showAddMasterDomain').toggle('fast','swing');
+	$('#showAddSlaveDomain').toggle('fast','swing');
+});
+
+$('.btn-switch-off').click(function(){
+	$('#showAddMasterDomain').toggle('fast','swing');
+	$('#showAddSlaveDomain').toggle('fast','swing');
+});
+
+    $('#addMasterDomainButton').click(function(evt){
+		var form = document.getElementById('addMasterDomainForm');
+		
+        if (form.checkValidity() === false) {
+          evt.preventDefault();
+          evt.stopPropagation();
+        } else {
+			evt.preventDefault();
+				saveMainData(function(id) {
+					location.assign("/domains/edit/" + id);
+				})				
+		}
+			
+        form.classList.add('was-validated');	
+    });
+	
+    $('#addSlaveDomainButton').click(function(evt){
+		var form = document.getElementById('addSlaveDomainForm');
+		
+        if (form.checkValidity() === false) {
+          evt.preventDefault();
+          evt.stopPropagation();
+        } else {
+			evt.preventDefault();
+				saveSlaveData(function(id) {
+					location.assign("/domains/edit/" + id);
+				})				
+		}
+			
+        form.classList.add('was-validated');	
+    });	
+	
+});	
+
+function saveMainData(callback) {
+	var stack_center = {"dir1": "down", "dir2": "right", "firstpos1": 25, "firstpos2": ($(window).width()/2 - 150)};
+	PNotify.defaults.styling = 'bootstrap4';		
+    var data = {
+        name: $('#addDomainName').val(),
+        primary: $('#addDomainNS').val(),
+        mail: $('#addDomainEmail').val(),
+        refresh: $('#addDomainRefresh').val(),
+        retry: $('#addDomainRetry').val(),
+        expire: $('#addDomainExpire').val(),
+        ttl: $('#addDomainTTL').val(),
+		adminID: $('#addDomainAdminAccount').val(),
+		adminEmail: $("#addDomainAdminAccount option:selected").text(),
+        type: "main",
+        action: "addMainDomain",
+        csrfToken: $('#csrfToken').text()
+    };
+    
+    $.post(
+        "/ajax/domains/add",
+        JSON.stringify(data),
+        function(data) {
+            callback(data.newID);
+        },
+        "json"
+    ).fail(function(response) {
+		PNotify.error({title: 'Error!', text: response.responseText, type: 'error', icon: false , addclass: "stack_center", stack: stack_center });
+});;
+}
+
+function saveSlaveData(callback) {
+	var stack_center = {"dir1": "down", "dir2": "right", "firstpos1": 25, "firstpos2": ($(window).width()/2 - 150)};
+	PNotify.defaults.styling = 'bootstrap4';		
+    var data = {
+        name: $('#addSlaveDomainName').val(),
+        primary: $('#addSlaveDomainNS').val(),
+		adminID: $('#addSlaveDomainAdminAccount').val(),
+		adminEmail: $("#addSlaveDomainAdminAccount option:selected").text(),
+        type: "slave",
+        action: "addSlaveDomain",
+        csrfToken: $('#csrfToken').text()
+    };
+    
+    $.post(
+        "/ajax/domains/add",
+        JSON.stringify(data),
+        function(data) {
+            callback(data.newID);
+        },
+        "json"
+    ).fail(function(response) {
+		PNotify.error({title: 'Error!', text: response.responseText, type: 'error', icon: false , addclass: "stack_center", stack: stack_center });
+});;
+}	
+	
+    Select2 = function() {
+        var e = $('[data-toggle="select"]');
+        e.length && e.each(function() {
+            $(this).select2({})
+        })
+    }()
+</script>
