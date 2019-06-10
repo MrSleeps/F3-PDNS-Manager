@@ -19,7 +19,7 @@ Upload everything to your server, setup your nginx/apache virtual host to point 
 
 In the config directory (outside of your webroot) copy the config.ini.sample file to config.ini, open up your editor and get cracking on changing what's in the file. You will need to add your Database Details, SMTP details (remove the << >> bits). It's fairly self explanatory, but if you are stuck the important bits are:
 
-`DB_DETS = "mysql:host=localhost;port=3306;dbname=<<YOUR DB NAME>>" (Your database name (e.g. pdns))
+DB_DETS = "mysql:host=localhost;port=3306;dbname=<<YOUR DB NAME>>" (Your database name (e.g. pdns))
 DB_HOST = localhost (Your database hostname)
 DB_NAME = <<YOUR DB NAME>> (Your database name (e.g. pdns))
 DB_USER = <<YOUR DB USERNAME>> (Your database username you created)
@@ -45,7 +45,7 @@ SMTPPWRESETFROMEMAIL = password-reset@your.do.main (Password reset email address
 DEFAULTSOAREFRESH = "7200" (Default Refresh (SOA) - Leave as is if you have no idea what that is)
 DEFAULTSOAEXPIRE = "86400" (Default Expire (SOA) - Leave as is if you have no idea what that is)
 DEFAULTSOARETRY = "3600" (Default Retry (SOA) - Leave as is if you have no idea what that is)
-DEFAULTSOATTL = "3600" (Default TTL (SOA) - Leave as is if you have no idea what that is)`
+DEFAULTSOATTL = "3600" (Default TTL (SOA) - Leave as is if you have no idea what that is)
 
 Config done...
 
