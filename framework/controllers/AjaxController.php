@@ -1,5 +1,8 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 class AjaxController extends Controller
 {
     
@@ -122,8 +125,8 @@ class AjaxController extends Controller
                 }
                 $error = "";
             }
-			
-			if ($domainType == "slave") { 
+            
+            if ($domainType == "slave") {
                 if (empty($domainName)) {
                     $error = "Domain Name Cannot Be Empty";
                     $this->returnError($error);
@@ -160,19 +163,19 @@ class AjaxController extends Controller
                     $this->returnError($error);
                     return;
                 }
-				if ($validate->isValidIP($domainPrimary) == false) {
+                if ($validate->isValidIP($domainPrimary) == false) {
                     $error = "Sorry, your Name Server IP address appears to be invalid.";
                     $this->returnError($error);
                     return;
-				}
+                }
                 if (!isset($error)) {
-                    $adddomain  = $domains->addSlave($domainName, $domainPrimary, 'SLAVE');
+                    $adddomain = $domains->addSlave($domainName, $domainPrimary, 'SLAVE');
                     if ($adddomain > 0) {
-						$logs->addLogEntry($adddomain, $domainName, $this->f3->get('SESSION.userid'), $this->f3->get('SESSION.email'), 'ADD', $domainName, $this->f3->get('SESSION.masteraccountid'));
-						header('Content-type: application/json');
-						echo json_encode(array(
-							'newID' => $adddomain
-						));
+                        $logs->addLogEntry($adddomain, $domainName, $this->f3->get('SESSION.userid'), $this->f3->get('SESSION.email'), 'ADD', $domainName, $this->f3->get('SESSION.masteraccountid'));
+                        header('Content-type: application/json');
+                        echo json_encode(array(
+                            'newID' => $adddomain
+                        ));
                     } else {
                         $this->returnError("Something has gone wrong");
                         return;
@@ -182,8 +185,8 @@ class AjaxController extends Controller
                     return;
                 }
                 $error = "";
-			
-			}
+                
+            }
             
         } elseif ($adminLevel == '1') {
             // Domain Admin
@@ -930,25 +933,25 @@ class AjaxController extends Controller
     
     public function ajaxUserUpdate($f3)
     {
-        $template        = new Template;
-        $domains         = new Domains($this->db);
-        $records         = new Records($this->db);
-        $users           = new Users($this->db);
-        $soa             = new SOA($this->db);
-        $validate        = new Validate($this->db);
-        $postedData       = json_decode($f3->get('BODY'), true);
-        $adminLevel       = $this->f3->get('SESSION.adminlevel');
-        $userMaxAccounts  = $this->f3->get('SESSION.maxdomains');
-        $userid       = $postedData['userID'];
-        $useremail  = $postedData['userEmail'];
-        $username    = $postedData['userFullName'];
-        $usermasteraccount      = $postedData['masterAccount'];
-        $maxdomains = $postedData['userMaxDomains'];
-        $userrole    = $postedData['userLevel'];
-        $userenabled     = $postedData['userEnabled'];
-        $userdisabled      = $postedData['userDisabled'];		
-        $adminLevel      = $this->f3->get('SESSION.adminlevel');
-        $masteraccountid = $this->f3->get('SESSION.masteraccountid');
+        $template          = new Template;
+        $domains           = new Domains($this->db);
+        $records           = new Records($this->db);
+        $users             = new Users($this->db);
+        $soa               = new SOA($this->db);
+        $validate          = new Validate($this->db);
+        $postedData        = json_decode($f3->get('BODY'), true);
+        $adminLevel        = $this->f3->get('SESSION.adminlevel');
+        $userMaxAccounts   = $this->f3->get('SESSION.maxdomains');
+        $userid            = $postedData['userID'];
+        $useremail         = $postedData['userEmail'];
+        $username          = $postedData['userFullName'];
+        $usermasteraccount = $postedData['masterAccount'];
+        $maxdomains        = $postedData['userMaxDomains'];
+        $userrole          = $postedData['userLevel'];
+        $userenabled       = $postedData['userEnabled'];
+        $userdisabled      = $postedData['userDisabled'];
+        $adminLevel        = $this->f3->get('SESSION.adminlevel');
+        $masteraccountid   = $this->f3->get('SESSION.masteraccountid');
         if ($adminLevel == '2') {
             $users->getById($userid);
             if ($users->dry()) {
@@ -969,13 +972,13 @@ class AjaxController extends Controller
                 return;
             }
             
-			if(isset($userenabled)) {
-				$useractive = "1";
-			}
-			
-			if(isset($userdisabled)) {
-				$useractive = "0";
-			}
+            if (isset($userenabled)) {
+                $useractive = "1";
+            }
+            
+            if (isset($userdisabled)) {
+                $useractive = "0";
+            }
             
             $updateduser = $users->updateUser($userid, $useremail, $userrole, $username, $maxdomains, $useractive, $usermasteraccount);
             if ($updateduser !== false) {
@@ -988,6 +991,196 @@ class AjaxController extends Controller
                 $this->returnError($error);
                 return;
             }
+        }
+        
+        if ($adminLevel == '1') {
+            if ($users->checkIsMaster($userid, $masteraccountid) == true) {
+                $users->getById($userid);
+                if ($users->dry()) {
+                    $error = "Admin Account Does Not Exist";
+                    $this->returnError($error);
+                    return;
+                }
+                
+                if ($validate->isValidNumber($userrole) === false) {
+                    $error = "User Role value is incorrect";
+                    $this->returnError($error);
+                    return;
+                }
+                
+                if ($validate->isValidNumber($maxdomains) === false) {
+                    $error = "Max Accounts value is incorrect";
+                    $this->returnError($error);
+                    return;
+                }
+                
+                if ($validate->isValidNumber($userenabled) === false) {
+                    $error = "User Enabled value is incorrect";
+                    $this->returnError($error);
+                    return;
+                }
+                
+                $updateduser = $users->updateUser($userid, $useremail, $userrole, $username, $maxdomains, $userenabled);
+                if ($updateduser !== false) {
+                    http_response_code(200);
+                    echo json_encode(array(
+                        "newemail" => $updateduser
+                    ));
+                } else {
+                    $error = "Record not Updated";
+                    $this->returnError($error);
+                    return;
+                }
+            } else {
+                $this->error("Record Not Updated");
+                return;
+            }
+        } else {
+            // $this->returnError('Your account cannot do that');
+        }
+    }
+    
+    public function ajaxUserPassword($f3)
+    {
+        $template        = new Template;
+        $users           = new Users($this->db);
+        $soa             = new SOA($this->db);
+        $validate        = new Validate($this->db);
+        $postedData      = json_decode($f3->get('BODY'), true);
+        $adminLevel      = $this->f3->get('SESSION.adminlevel');
+        $userMaxAccounts = $this->f3->get('SESSION.maxdomains');
+        $userid          = $postedData['userID'];
+        $useremail       = $postedData['passwordOne'];
+        $username        = $postedData['passwordTwo'];
+        $adminLevel      = $this->f3->get('SESSION.adminlevel');
+        $masteraccountid = $this->f3->get('SESSION.masteraccountid');
+        if ($adminLevel == '2') {
+            $users->getById($userid);
+            if ($users->dry()) {
+                $error = "User Account Does Not Exist";
+                $this->returnError($error);
+                return;
+            }
+            if ($passwordOne == $passwordTwo) {
+                $updateduser = $users->updateUserPassword($userid, $passwordOne);
+                if ($updateduser !== false) {
+                    http_response_code(200);
+                    echo json_encode(array(
+                        "Message" => "User Password Changed"
+                    ));
+                } else {
+                    $error = "User Password Not Changed";
+                    $this->returnError($error);
+                    return;
+                }
+            } else {
+                $error = "Passwords Don't Match";
+                $this->returnError($error);
+                return;
+            }
+            
+        }
+        
+        if ($adminLevel == '1') {
+            if ($users->checkIsMaster($userid, $masteraccountid) == true) {
+                $users->getById($userid);
+                if ($users->dry()) {
+                    $error = "Admin Account Does Not Exist";
+                    $this->returnError($error);
+                    return;
+                }
+                
+                if ($validate->isValidNumber($userrole) === false) {
+                    $error = "User Role value is incorrect";
+                    $this->returnError($error);
+                    return;
+                }
+                
+                if ($validate->isValidNumber($maxdomains) === false) {
+                    $error = "Max Accounts value is incorrect";
+                    $this->returnError($error);
+                    return;
+                }
+                
+                if ($validate->isValidNumber($userenabled) === false) {
+                    $error = "User Enabled value is incorrect";
+                    $this->returnError($error);
+                    return;
+                }
+                
+                $updateduser = $users->updateUser($userid, $useremail, $userrole, $username, $maxdomains, $userenabled);
+                if ($updateduser !== false) {
+                    http_response_code(200);
+                    echo json_encode(array(
+                        "newemail" => $updateduser
+                    ));
+                } else {
+                    $error = "Record not Updated";
+                    $this->returnError($error);
+                    return;
+                }
+            } else {
+                $this->error("Record Not Updated");
+                return;
+            }
+        } else {
+            // $this->returnError('Your account cannot do that');
+        }
+    }
+    
+    public function ajaxResetUserPassword($f3)
+    {
+        $template        = new Template;
+        $users           = new Users($this->db);
+        $validate        = new Validate($this->db);
+        $postedData      = json_decode($f3->get('BODY'), true);
+        $adminLevel      = $this->f3->get('SESSION.adminlevel');
+        $userMaxAccounts = $this->f3->get('SESSION.maxdomains');
+        $userEmail       = $postedData['userEmail'];
+        $adminLevel      = $this->f3->get('SESSION.adminlevel');
+        $masteraccountid = $this->f3->get('SESSION.masteraccountid');
+        if ($adminLevel == '2') {
+            if ($users->checkEmailExists($userEmail) == 1) {
+                // Users Email exists in system, send out reset email.
+                $userResetToken = $users->createResetToken();
+                $users->updateUserResetToken($userEmail, $userResetToken, date("Y-m-d H:i:s", strtotime('+1 hour')));
+                $mail = new PHPMailer(true);
+                try {
+                    $mail->SMTPDebug = $this->f3->get('SMTPDEBUG');
+                    $mail->isSMTP();
+                    $mail->Host       = $this->f3->get('SMTPHOST');
+                    $mail->SMTPAuth   = $this->f3->get('SMTPAUTH');
+                    $mail->Username   = $this->f3->get('SMTPUSERNAME');
+                    $mail->Password   = $this->f3->get('SMTPPASSWORD');
+                    $mail->SMTPSecure = $this->f3->get('SMTPSECURE');
+                    $mail->Port       = $this->f3->get('SMTPPORT');
+                    $mail->setFrom($this->f3->get('SMTPPWRESETFROMEMAIL'), $this->f3->get('SMTPPWRESETFROMNAME'));
+                    $mail->addAddress($userEmail, 'User');
+                    $mail->isHTML(true);
+                    $mail->Subject     = $this->f3->get('SITENAME') . ' Password Reset';
+                    $passwordResetLink = $this->f3->get('SITEURL') . "reset-password/" . $userResetToken;
+                    $emailMessage      = file_get_contents('../framework/views/emails/reset-password.html');
+                    $emailMessage      = str_replace('@@SITEURL@@', $this->f3->get('SITEURL'), $emailMessage);
+                    $emailMessage      = str_replace('@@SITENAME@@', $this->f3->get('SITENAME'), $emailMessage);
+                    $emailMessage      = str_replace('@@PASSWORDRESETLINK@@', $passwordResetLink, $emailMessage);
+                    $emailMessage      = str_replace('@@RESETTOKEN@@', $userResetToken, $emailMessage);
+                    $mail->Body        = $emailMessage;
+                    $mail->send();
+                    $resetMessage = "The email has been sent to the user";
+                }
+                catch (Exception $e) {
+                    $error = "There appears to have been some kind of problem sending the email, the error message is: <strong>{$mail->ErrorInfo}</strong>";
+                    $this->returnError($error);
+                    return;
+                }
+            } else {
+                $resetMessage = "The email has been sent to the user";
+            }
+            http_response_code(200);
+            echo json_encode(array(
+                "Message" => $resetMessage
+            ));
+            
         }
         
         if ($adminLevel == '1') {
@@ -1172,6 +1365,7 @@ class AjaxController extends Controller
             }
             
             if (empty($adminLevel)) {
+
                 if ($validate->isValidNumber($adminLevel) === false) {
                     $error = "User Level value is incorrect";
                     $this->returnError($error);

@@ -27,7 +27,9 @@ $f3->route('GET /users','DashboardController->renderViewUsers');
 $f3->route('GET /users/add','DashboardController->renderAddUser');
 $f3->route('GET /users/edit/@USERID','DashboardController->renderEditUser');
 // Users AJAX
-$f3->route('POST /ajax/users/update [ajax]','AjaxController->ajaxuserupdate');
+$f3->route('POST /ajax/users/update [ajax]','AjaxController->ajaxUserUpdate');
+$f3->route('POST /ajax/users/password [ajax]','AjaxController->ajaxUserPassword');
+$f3->route('POST /ajax/users/password/reset [ajax]','AjaxController->ajaxResetUserPassword');
 $f3->route('POST /ajax/users/add [ajax]','AjaxController->ajaxuseradd');
 $f3->route('POST /ajax/users/delete [ajax]','AjaxController->ajaxuserdelete');
 // Logs

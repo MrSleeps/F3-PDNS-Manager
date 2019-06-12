@@ -13,7 +13,7 @@ class Controller
     
     function afterroute()
     {
-
+        
     }
     
     function __construct()

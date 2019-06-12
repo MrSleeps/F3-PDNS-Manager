@@ -2,13 +2,13 @@
 
 class DashboardController extends Controller
 {
-	
-	public function beforeroute()
+    
+    public function beforeroute()
     {
-
+        
     }
     public function renderDashboard($f3)
-    {	
+    {
         $template   = new Template;
         $domains    = new Domains($this->db);
         $domaindata = new DomainData($this->db);
@@ -19,7 +19,7 @@ class DashboardController extends Controller
         $logins     = new Logins($this->db);
         $logs       = new BigBrother($this->db);
         $validate   = new Validate($this->db);
-		$validate->isLoggedIn($f3,$this->db);		
+        $validate->isLoggedIn($f3, $this->db);
         $adminlevel      = $this->f3->get('SESSION.adminlevel');
         $userleveldesc   = $this->f3->get('SESSION.adminleveldesc');
         $userid          = $this->f3->get('SESSION.userid');
@@ -173,7 +173,7 @@ class DashboardController extends Controller
         $records  = new Records($this->db);
         $users    = new Users($this->db);
         $validate = new Validate($this->db);
-        $validate->isLoggedIn($f3,$this->db);
+        $validate->isLoggedIn($f3, $this->db);
         $adminlevel      = $this->f3->get('SESSION.adminlevel');
         $userleveldesc   = $this->f3->get('SESSION.adminleveldesc');
         $userid          = $this->f3->get('SESSION.userid');
@@ -251,7 +251,7 @@ class DashboardController extends Controller
         $records  = new Records($this->db);
         $users    = new Users($this->db);
         $validate = new Validate($this->db);
-        $validate->isLoggedIn($f3,$this->db);
+        $validate->isLoggedIn($f3, $this->db);
         $adminlevel    = $this->f3->get('SESSION.adminlevel');
         $userleveldesc = $this->f3->get('SESSION.adminleveldesc');
         switch ($adminlevel) {
@@ -319,7 +319,7 @@ class DashboardController extends Controller
         $users      = new Users($this->db);
         $soa        = new SOA($this->db);
         $validate   = new Validate($this->db);
-        $validate->isLoggedIn($f3,$this->db);
+        $validate->isLoggedIn($f3, $this->db);
         $adminlevel      = $this->f3->get('SESSION.adminlevel');
         $userleveldesc   = $this->f3->get('SESSION.adminleveldesc');
         $userid          = $this->f3->get('SESSION.userid');
@@ -438,7 +438,7 @@ class DashboardController extends Controller
         $records  = new Records($this->db);
         $users    = new Users($this->db);
         $validate = new Validate($this->db);
-        $validate->isLoggedIn($f3,$this->db);
+        $validate->isLoggedIn($f3, $this->db);
         $adminlevel    = $this->f3->get('SESSION.adminlevel');
         $userleveldesc = $this->f3->get('SESSION.adminleveldesc');
         switch ($adminlevel) {
@@ -515,7 +515,7 @@ class DashboardController extends Controller
         $users    = new Users($this->db);
         $soa      = new SOA($this->db);
         $validate = new Validate($this->db);
-        $validate->isLoggedIn($f3,$this->db);
+        $validate->isLoggedIn($f3, $this->db);
         $adminlevel    = $this->f3->get('SESSION.adminlevel');
         $userleveldesc = $this->f3->get('SESSION.adminleveldesc');
         switch ($adminlevel) {
@@ -552,10 +552,10 @@ class DashboardController extends Controller
             if (empty($userdomains)) {
             }
             $userLevels = new UserLevel($this->db);
-			$allLevels = $userLevels->all();
+            $allLevels  = $userLevels->all();
             $userEmails = $users->listAllEmails();
             $this->f3->set('ALLEMAILS', $userEmails);
-			$this->f3->set('USERLEVELS', $allLevels);
+            $this->f3->set('USERLEVELS', $allLevels);
             $this->f3->set('USEREMAIL', $users->userEmail);
             $this->f3->set('USERNAME', $users->userName);
             $this->f3->set('USERADMINLEVEL', $users->userAdminLevel);
@@ -569,10 +569,10 @@ class DashboardController extends Controller
             }
             
             $this->f3->set('DOMAINRECORDS', $domainrecords);
-			$this->f3->set('PAGECONTENT', $urlslug . 'users/users-edit.html');
-			$this->f3->set('PAGESIDEMENU', $urlslug . 'sidemenu.html');
-			$this->f3->set('PAGEJAVASCRIPT', $urlslug . 'users/users-edit-js.html');
-			$this->f3->set('PAGECSS', $urlslug . 'users/users-edit-css.html');
+            $this->f3->set('PAGECONTENT', $urlslug . 'users/users-edit.html');
+            $this->f3->set('PAGESIDEMENU', $urlslug . 'sidemenu.html');
+            $this->f3->set('PAGEJAVASCRIPT', $urlslug . 'users/users-edit-js.html');
+            $this->f3->set('PAGECSS', $urlslug . 'users/users-edit-css.html');
             $this->f3->set('PAGETOPNAV', $urlslug . 'dashboard/dashboard-header-nav.html');
             $this->f3->set('PAGETOPNAVMOBILE', $urlslug . 'dashboard/dashboard-header-nav-mobile.html');
             $this->f3->set('PAGEFOOTER', 'dashboard/footer.html');
@@ -606,13 +606,13 @@ class DashboardController extends Controller
                 }
                 
                 $this->f3->set('DOMAINRECORDS', $domainrecords);
-				$this->f3->set('PAGECONTENT', $urlslug . 'users/users-edit.html');
-				$this->f3->set('PAGESIDEMENU', $urlslug . 'sidemenu.html');
-				$this->f3->set('PAGEJAVASCRIPT', $urlslug . 'users/users-edit-js.html');
-				$this->f3->set('PAGECSS', $urlslug . 'users/users-edit-css.html');
-            $this->f3->set('PAGETOPNAV', $urlslug . 'dashboard/dashboard-header-nav.html');
-            $this->f3->set('PAGETOPNAVMOBILE', $urlslug . 'dashboard/dashboard-header-nav-mobile.html');
-            $this->f3->set('PAGEFOOTER', 'dashboard/footer.html');
+                $this->f3->set('PAGECONTENT', $urlslug . 'users/users-edit.html');
+                $this->f3->set('PAGESIDEMENU', $urlslug . 'sidemenu.html');
+                $this->f3->set('PAGEJAVASCRIPT', $urlslug . 'users/users-edit-js.html');
+                $this->f3->set('PAGECSS', $urlslug . 'users/users-edit-css.html');
+                $this->f3->set('PAGETOPNAV', $urlslug . 'dashboard/dashboard-header-nav.html');
+                $this->f3->set('PAGETOPNAVMOBILE', $urlslug . 'dashboard/dashboard-header-nav-mobile.html');
+                $this->f3->set('PAGEFOOTER', 'dashboard/footer.html');
             }
             // echo $this->db->log();
         }
@@ -626,7 +626,7 @@ class DashboardController extends Controller
         $records  = new Records($this->db);
         $users    = new Users($this->db);
         $validate = new Validate($this->db);
-        $validate->isLoggedIn($f3,$this->db);
+        $validate->isLoggedIn($f3, $this->db);
         $adminlevel    = $this->f3->get('SESSION.adminlevel');
         $userleveldesc = $this->f3->get('SESSION.adminleveldesc');
         switch ($adminlevel) {
@@ -654,21 +654,25 @@ class DashboardController extends Controller
         if ($adminlevel == "2") {
             // Site Admin
             $this->f3->set('ALLEMAILS', $useremails);
-            $this->f3->set('PAGECONTENT', $urlslug . 'users-add.html');
+            $this->f3->set('PAGECONTENT', $urlslug . 'users/users-add.html');
             $this->f3->set('PAGESIDEMENU', $urlslug . 'sidemenu.html');
-            $this->f3->set('PAGEJAVASCRIPT', $urlslug . 'js/js-users-add.html');
-            $this->f3->set('PAGECSS', $urlslug . 'css/css-domains-add.html');
-            $this->f3->set('PAGETOPNAV', $urlslug . 'header-nav.html');
+            $this->f3->set('PAGEJAVASCRIPT', $urlslug . 'users/users-add-js.html');
+            $this->f3->set('PAGECSS', $urlslug . 'users/users-add-css.html');
+            $this->f3->set('PAGETOPNAV', $urlslug . 'dashboard/dashboard-header-nav.html');
+            $this->f3->set('PAGETOPNAVMOBILE', $urlslug . 'dashboard/dashboard-header-nav-mobile.html');
+            $this->f3->set('PAGEFOOTER', 'dashboard/footer.html');
         }
         
         if ($adminlevel == "1") {
             // Domain Admin
             $this->f3->set('ALLEMAILS', $useremails);
-            $this->f3->set('PAGECONTENT', $urlslug . 'users-add.html');
+            $this->f3->set('PAGECONTENT', $urlslug . 'users/users-add.html');
             $this->f3->set('PAGESIDEMENU', $urlslug . 'sidemenu.html');
-            $this->f3->set('PAGEJAVASCRIPT', $urlslug . 'js/js-users-add.html');
-            $this->f3->set('PAGECSS', $urlslug . 'css/css-domains-add.html');
-            $this->f3->set('PAGETOPNAV', $urlslug . 'header-nav.html');
+            $this->f3->set('PAGEJAVASCRIPT', $urlslug . 'users/users-add-js.html');
+            $this->f3->set('PAGECSS', $urlslug . 'users/users-add-css.html');
+            $this->f3->set('PAGETOPNAV', $urlslug . 'dashboard/dashboard-header-nav.html');
+            $this->f3->set('PAGETOPNAVMOBILE', $urlslug . 'dashboard/dashboard-header-nav-mobile.html');
+            $this->f3->set('PAGEFOOTER', 'dashboard/footer.html');
         }
         
         echo $template->render('dashboard/index-template.html');
@@ -685,7 +689,7 @@ class DashboardController extends Controller
         $validate   = new Validate($this->db);
         $logins     = new Logins($this->db);
         $logs       = new BigBrother($this->db);
-        $validate->isLoggedIn($f3,$this->db);
+        $validate->isLoggedIn($f3, $this->db);
         $adminlevel      = $this->f3->get('SESSION.adminlevel');
         $userleveldesc   = $this->f3->get('SESSION.adminleveldesc');
         $userid          = $this->f3->get('SESSION.userid');
@@ -810,7 +814,7 @@ class DashboardController extends Controller
         $validate   = new Validate($this->db);
         $logins     = new Logins($this->db);
         $logs       = new BigBrother($this->db);
-        $validate->isLoggedIn($f3,$this->db);
+        $validate->isLoggedIn($f3, $this->db);
         $adminlevel      = $this->f3->get('SESSION.adminlevel');
         $userleveldesc   = $this->f3->get('SESSION.adminleveldesc');
         $userid          = $this->f3->get('SESSION.userid');

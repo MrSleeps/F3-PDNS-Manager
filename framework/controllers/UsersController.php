@@ -122,10 +122,10 @@ class UsersController extends Controller
                 $this->f3->set('SESSION.maxdomains', $users->userMaxDomains);
                 $this->f3->set('SESSION.userid', $users->userID);
                 $this->f3->set('SESSION.masteraccountid', $users->userMasterAccount);
-				if($this->f3->get('POST.rememberMe')) {
-					$authTokens = new AuthTokens($this->db);
-					$generateAuthTokens = $authTokens->generateAuthTokens($users->userID);
-				}
+                if ($this->f3->get('POST.rememberMe')) {
+                    $authTokens         = new AuthTokens($this->db);
+                    $generateAuthTokens = $authTokens->generateAuthTokens($users->userID);
+                }
                 $logins->add($users->userID, $this->f3->get('IP'), $this->f3->get('AGENT'), $users->userMasterAccount);
                 $this->f3->reroute('/');
             } else {
@@ -141,7 +141,7 @@ class UsersController extends Controller
     public function logout($f3)
     {
         $this->f3->clear('SESSION');
-		setcookie('rememberMe', null, -1, '/');
+        setcookie('rememberMe', null, -1, '/');
         $this->f3->reroute('/');
     }
 }

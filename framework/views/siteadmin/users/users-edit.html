@@ -1,30 +1,25 @@
-  <div class="main-content">
+  <div class="main-content" id="panel">
     <!-- Top navbar -->
 <include href="{{@PAGETOPNAV}}" />
     <!-- Header -->
     <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
       <div class="container-fluid">
-        <div class="header-body">
-          <!-- Card stats -->
 
-        </div>
       </div>
     </div>
     <!-- Page content -->
-    <div class="container-fluid mt--7">
-      <div class="row">
-		  <div class="col-lg-12">
-			<div class="card mb-4">
+    <div class="container-fluid mt--6">
+      <div class="card mb-4">
         <!-- Card header -->
-		        <div class="card-header">
-          			<h3 class="mb-0">Edit <span id="userEmailText">{{@USEREMAIL}}</span> (User ID: <span id="userIDText">{{@USERID}}</span>)
-       			 </div>
+        <div class="card-header">
+          <h3 class="mb-0">Edit <span id="userEmailText">{{@USEREMAIL}}</span> (User ID: <span id="userIDText">{{@USERID}}</span>)</h3>
+        </div>
         <!-- Card body -->
-			  <form id="updateUserForm">
-				  <input type="hidden" name="userID" id="userID" value="{{@USERID}}">					
+		<form id="updateUserForm">
+		<input type="hidden" name="userID" id="userID" value="{{@USERID}}">
         <div class="card-body">
+          <!-- Form groups used in grid -->
           <div class="row">
-
             <div class="col-sm-6 col-md-6 col-lg-3">
               <div class="form-group">
                 <label for="userEmail" class="form-control-label">Email</label>
@@ -56,10 +51,10 @@
 </repeat>		
 				</select>
               </div>
-            </div>			  
+            </div>
           </div>
           <div class="row">
-            <div class="col-sm-6 col-md-6 col-lg-3">
+			<div class="col-sm-6 col-md-6 col-lg-3">
               <div class="form-group">
                 <label for="userMaxDomains" class="form-control-label">Max Domains <small>0 = Unlimited</small></label>
                 <input name="userMaxDomains" type="number" class="form-control" id="userMaxDomains" value="{{@USERMAXDOM}}">
@@ -78,7 +73,7 @@
 				</div>
               </div>
             </div>
-          </div>			
+          </div>
           <div class="row">
             <div class="col-sm-12">
               <div class="form-group">
@@ -86,45 +81,113 @@
               </div>
             </div>
           </div>
-	  </form>
-		  <hr class="my-4" />
-          <h6 class="heading-small text-muted mb-4">Domains</h6>			
-		  <div class="row">
-            <div class="col-sm-12">
+        </div>
+		</form>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="card-wrapper">
+            <!-- Form controls -->
+            <div class="card mb-4">
+              <!-- Card header -->
+              <div class="card-header">
+                <h3 class="mb-0">Change Password</h3>
+              </div>
+              <!-- Card body -->
+              <div class="card-body">
+                <form id="changePasswordForm" class="needs-validation" novalidate>
+					<input type="hidden" name="userID" id="userIDPW" value="{{@USERID}}">
+                  <div class="form-group">
+                    <label class="form-control-label" for="passwordOne">Password</label>
+                    <input type="password" class="form-control" id="passwordOne" name="passwordOne">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-control-label" for="passwordTwo">Password</label>
+                    <input type="password" class="form-control" id="passwordTwo" name="passwordTwo">
+                  </div>
+				<div class="col-sm-12">
+				  <div class="form-group">
+					<button type="button" class="btn btn-default float-left" id="generatePasswordButton">Generate Password</button>
+				  </div>					
+				  <div class="form-group">
+					<button type="submit" class="btn btn-primary float-right" id="changePasswordButton">Change Password</button>
+				  </div>
+				</div>					
+                </form>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="card-wrapper">
+            <!-- Sizes -->
+            <div class="card">
+              <!-- Card header -->
+              <div class="card-header">
+                <h3 class="mb-0">Reset Password</h3>
+              </div>
+              <!-- Card body -->
+              <div class="card-body">
+                <div class="form-group">
+                  <label class="form-control-label">Click the button below to reset the users password, they will receive an email with instructions to reset their password.</label>
+                </div>
+                <div class="form-group">
+				<form id="resetUserPassword">
+					<input type="hidden" name="usersEmail" id="pwResetEmail" value="{{@USEREMAIL}}">
+                  <button type="button" class="btn btn-primary float-right" id="resetPasswordButton">Reset Password</button>
+				</form>
+                </div>	
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card-wrapper">
+            <!-- Form controls -->
+            <div class="card">
+              <!-- Card header -->
+              <div class="card-header">
+                <h3 class="mb-0">Domains for {{@USEREMAIL}}</h3>
+              </div>
+              <!-- Card body -->
+              <div class="card-body">
 			  <div class="table-responsive">
 				<table class="table table-flush table-sm" id="datatable-records">
 				  <thead class="thead-light">
 					<tr>
 					  <th>ID</th>
 					  <th>Name</th>
-					  <th>Type</th>
 					  <th>Records</th>
 					  <th></th>
 					</tr>
-				  </thead>						  
-				  </tfoot>
+				  </thead>
 				  <tbody>
-					<repeat group="{{@USERDOMLIST}}" value="{{@dr}}" counter="{{ @ctr }}">
-					  <tr id="row{{@dr.id}}">
-						<td>{{@dr.id}}</td>
-						<td>{{@dr.name}}</td>
-						<td>{{@dr.type}}</td>
-						<td>{{@dr.recordCount}}</td>
-						<td class="text-center"><a href="/domains/edit/{{@dr.id}}" class="btn btn-sm btn-info" role="button"><span class="hidden-md-down">Edit&nbsp;&nbsp;</span><i class="fa fa-edit"></i></a></td>
+					<repeat group="{{@USERDOMLIST}}" value="{{@udr}}">
+					  <tr id="row{{@udr.id}}">
+						<td>{{@udr.id}}</td>
+						<td>{{@udr.name}}</td>
+						<td>{{@udr.recordCount}}</td>
+						<td class="text-center"><a href="/domains/edit/{{@udr.id}}" class="btn btn-sm btn-info" role="button"><span class="hidden-md-down">Edit&nbsp;&nbsp;</span><i class="fa fa-edit"></i></a><button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#confirmDomainDelete" data-domainid="{{@udr.id}}" data-domainname="{{@udr.name}}"><span class="hidden-md-down">Delete&nbsp;&nbsp;</span><span class="fa fa-trash"></span></button></td>
 					  </tr>
 					</repeat>
 				  </tbody>
 				</table>
 			  </div>
+              </div>
+
             </div>
-          </div>	
+          </div>
         </div>
-      </div>			  
-		  </div>
-		  
       </div>
+      <!-- Footer -->
+<include href="{{@PAGEFOOTER}}" />
+    </div>
+  </div>
                 <div class="col-md-4">
-                  <div class="modal fade" id="confirmRecordDelete" tabindex="-1" role="dialog" aria-labelledby="confirmRecordDelete" aria-hidden="true">
+                  <div class="modal fade" id="confirmDomainDelete" tabindex="-1" role="dialog" aria-labelledby="confirmDomainDelete" aria-hidden="true">
                     <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
                       <div class="modal-content bg-gradient-danger">
                         <div class="modal-header">
@@ -148,7 +211,3 @@
                     </div>
                   </div>
                 </div>
-      <!-- Footer -->
-<include href="{{@PAGEFOOTER}}" />
-    </div>
-  </div>
