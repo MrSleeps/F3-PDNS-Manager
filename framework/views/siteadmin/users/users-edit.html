@@ -53,7 +53,7 @@
 											<select name="masterAccount" class="form-control form-control-alternative" id="masterAccount">
 												<repeat group="{{ @ALLEMAILS }}" value="{{ @ae }}">
 													<option value="{{@ae.userID}}"
-														<check if="{{@ae.userID == @USERID}}">
+														<check if="{{@ae.userID == @USERMASTERID}}">
 															<true> selected</true>
 														</check>>{{@ae.userEmail}}
 													</option>

@@ -562,6 +562,7 @@ class DashboardController extends Controller
             $this->f3->set('USERADMINLEVEL', $users->userAdminLevel);
             $this->f3->set('USERENABLED', $users->userEnabled);
             $this->f3->set('USERMAXDOM', $users->userMaxDomains);
+			$this->f3->set('USERMASTERID', $users->userMasterAccount);
             $this->f3->set('USERID', $userid);
             $this->f3->set('USERDOMLIST', $userdomains);
             $domainrecords = $records->getDomainRecords($domainid);
