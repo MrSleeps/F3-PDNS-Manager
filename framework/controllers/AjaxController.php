@@ -347,6 +347,54 @@ class AjaxController extends Controller
             $this->returnError('Your account cannot do that');
         }
     }
+	
+    public function ajaxachangeOwner($f3)
+    {
+        $template   = new Template;
+        $domains    = new Domains($this->db);
+		$domainData = new DomainData($this->db);
+        $users      = new Users($this->db);
+        $soa        = new SOA($this->db);
+        $validate   = new Validate($this->db);
+        $domainData = new DomainData($this->db);
+        $logs       = new BigBrother($this->db);
+		$records    = new Records($this->db);
+        $adminLevel = $this->f3->get('SESSION.adminlevel');
+		$postedData = json_decode($f3->get('BODY'), true);
+		$domainID   = $postedData["cDomainID"];
+		$currentOwner = $postedData["currentOwner"];
+		$newOwner   = $postedData["newOwner"];
+        if ($adminLevel == '2') {
+            if (empty($domainID)) {
+                $error = "A problem occured, please refresh the page.";
+            }
+            
+            if (!$error) {
+				$masterID = $users->getMasterAccount($currentOwner);
+                $changeOwner = $domainData->changeOwner($domainID,$currentOwner,$newOwner,$masterID);
+				$newEmail = $users->returnUserEmail($newOwner);
+            	list($soaprimary, $soaemail, $soaserial, $soarefresh, $soaretry, $soaexpire, $soattl) = $soa->getSOADetails($domainID);
+				$updateSOAEmail = $records->updateSOA($domainID, $soaprimary, $newEmail, $soaserial, $soarefresh, $soaretry, $soaexpire, $soattl);
+            if ($updateSOAEmail > 0) {
+                $updatedserial = $records->updateSerial($domainID);
+                if ($updatedserial > 0) {
+                    //$logs->addLogEntry($domainID, $domainName, $this->f3->get('SESSION.userid'), $this->f3->get('SESSION.email'), 'UPDATE', 'SOA for ' . $domainName, $masterAccountID);
+                }				
+				//$domainInfo = $domains->getById($domainID);
+				//$domainName = $domainInfo[0]["name"];
+                //$logs->addLogEntry($domainID, $domainName, $this->f3->get('SESSION.userid'), $this->f3->get('SESSION.email'), 'CHANGE OWNERSHIP', $domainName, $this->f3->get('SESSION.masteraccountid'));
+                        header('Content-type: application/json');
+                        echo json_encode(array(
+                            'Message' => "Domain Owner Changed", "newOwnerEmail" => $newEmail
+                        ));
+            } else {
+                $this->returnError($error);
+                return;
+            }
+        }
+
+      }
+	}
     
     public function ajaxSOAUpdate($f3)
     {

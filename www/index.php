@@ -18,6 +18,7 @@ $f3->route('GET /domains/edit/@DOMAINID','DashboardController->renderEditDomain'
 // Domains AJAX
 $f3->route('POST /ajax/domains/add [ajax]','AjaxController->ajaxAddDomain');
 $f3->route('POST /ajax/domains/delete [ajax]','AjaxController->ajaxaDeleteDomain');
+$f3->route('POST /ajax/domains/changeowner [ajax]','AjaxController->ajaxaChangeOwner');
 $f3->route('POST /ajax/records/soaupdate [ajax]','AjaxController->ajaxSOAUpdate');
 $f3->route('POST /ajax/records/update [ajax]','AjaxController->ajaxUpdateRecord');
 $f3->route('POST /ajax/records/add [ajax]','AjaxController->ajaxaddrecord');

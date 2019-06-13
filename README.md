@@ -40,6 +40,7 @@ Pretty much everything, currently only part of the DNS Admin stuff works, it is 
 - [ ] Domain and Record Limits (Per User and/or Per Domain)
 - [ ] Tidy Up Plugins Folder
 - [ ] Password checking against Have I Been Pwned
+- [ ] Fix Logging
 
 ## Prerequisities
 

@@ -366,7 +366,7 @@ class DashboardController extends Controller
             if ($domains->dry()) {
                 // Error Handling
             }
-            
+            $this->f3->set('USERID',$userid);
             $this->f3->set('DOMAINNAME', $domains->name);
             $this->f3->set('DOMAINID', $domainid);
             list($soaprimary, $soaemail, $soaserial, $soarefresh, $soaretry, $soaexpire, $soattl) = $soa->getSOADetails($domainid);
@@ -381,7 +381,8 @@ class DashboardController extends Controller
             if ($records->dry()) {
                 // Error Handling
             }
-            
+            $useremails = $users->listAllEmails();
+			$this->f3->set('ALLEMAILS',$useremails);
             $this->f3->set('DOMAINRECORDS', $domainrecords);
             $this->f3->set('PAGECONTENT', $urlslug . 'domains/domains-edit.html');
             $this->f3->set('PAGESIDEMENU', $urlslug . 'sidemenu.html');

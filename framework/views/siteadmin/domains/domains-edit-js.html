@@ -206,6 +206,11 @@ $(document).ready(function() {
         width: 'style',
         placeholder: placeholder
     });
+	
+    $('#newOwner').select2({
+
+        width: 'style'
+    });	
 
     Select2 = function() {
         var e = $('[data-toggle="select"]');
@@ -319,6 +324,44 @@ $(document).ready(function() {
             });
         });
     }
+	
+    $("#changeOwnerButton").click(function() {
+        var data = {
+            newOwner: $('#newOwner').val(),
+			currentOwner: $('#currentOwner').val(),
+			cDomainID: $('#cDomainID').val(),
+			newEmail: $("#newOwner option:selected").text(),
+            csrfToken: $('#csrfToken').text()
+        };
+        $.ajax({
+            type: 'POST',
+            url: "/ajax/domains/changeowner",
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function(data) {
+                PNotify.success({
+                    title: 'Success!',
+                    text: data.Message,
+                    type: 'error',
+                    icon: false,
+                    addclass: "stack_center",
+                    stack: stack_center
+                });
+				$('#soamail').val(data.newOwnerEmail);
+            },
+            error: function(response) {
+                PNotify.error({
+                    title: 'Error!',
+                    text: response.responseText,
+                    type: 'error',
+                    icon: false,
+                    addclass: "stack_center",
+                    stack: stack_center
+                });
+            }
+        });
+        return false;
+    });	
 
     $('#confirmRecordDelete').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget)
