@@ -29,7 +29,7 @@ class AjaxController extends Controller
         $domainRetry      = $postedData['retry'];
         $domainTTL        = $postedData['ttl'];
         $domainType       = $postedData['type'];
-        if ($adminLevel == '2') {
+        if ($adminLevel == "0") {
             if ($domainType == "main") {
                 if (empty($domainName)) {
                     $error = "Domain Name Cannot Be Empty";
@@ -310,7 +310,7 @@ class AjaxController extends Controller
         $adminLevel = $this->f3->get('SESSION.adminlevel');
         $domainID   = $f3->get('POST.domainid');
         $domainName = $f3->get('POST.name');
-        if ($adminLevel == '2') {
+        if ($adminLevel == "0") {
             if (empty($domainID)) {
                 $error = "A problem occured, please refresh the page.";
             }
@@ -364,7 +364,7 @@ class AjaxController extends Controller
 		$domainID   = $postedData["cDomainID"];
 		$currentOwner = $postedData["currentOwner"];
 		$newOwner   = $postedData["newOwner"];
-        if ($adminLevel == '2') {
+        if ($adminLevel == "0") {
             if (empty($domainID)) {
                 $error = "A problem occured, please refresh the page.";
             }
@@ -490,7 +490,7 @@ class AjaxController extends Controller
                 return;
             }
         }
-        if ($adminLevel == "1" || $adminLevel == "0") {
+        if ($adminLevel == "0" || $adminLevel == "1" || $adminlevel == "2") {
             if ($domainData->checkIsOwner($domainID, $this->f3->get('SESSION.masteraccountid')) == true) {
                 if ($validate->isValidDomainID($domainID, $this->db) == false) {
                     $error = "Not a Valid Domain ID";
@@ -590,7 +590,7 @@ class AjaxController extends Controller
         $pk    = $f3->get('POST.pk');
         $name  = $f3->get('POST.name');
         $value = $f3->get('POST.value');
-        if ($adminLevel == '2') {
+        if ($adminLevel == "0") {
             $records->load(array(
                 'id=?',
                 $pk
@@ -681,7 +681,7 @@ class AjaxController extends Controller
                 ));
             }
         }
-        if ($adminLevel == '1' || $adminLevel == '0') {
+        if ($adminLevel == "0" || $adminLevel == "1" || $adminlevel == "2") {
             $records->load(array(
                 'id=?',
                 $pk
@@ -778,7 +778,7 @@ class AjaxController extends Controller
         $recordttl      = $f3->get('POST.ttl');
         $domainID       = $f3->get('POST.domain');
         $domainName     = $f3->get('POST.name');
-        if ($adminLevel == '2') {
+        if ($adminLevel == "0") {
             if (empty($recordtype)) {
                 $error = "Record Type Cannot Be Empty";
                 $this->returnError($error);
@@ -846,7 +846,7 @@ class AjaxController extends Controller
             }
             $error = "";
         }
-        if ($adminLevel == '1' || $adminLevel == '0') {
+        if ($adminLevel == "0" || $adminLevel == "1") {
             if ($domainData->checkIsOwner($domainID, $this->f3->get('SESSION.masteraccountid')) == true) {
                 if (empty($recordtype)) {
                     $error = "Record Type Cannot Be Empty";
@@ -935,7 +935,7 @@ class AjaxController extends Controller
         $recordcontent = $f3->get('POST.content');
         $domainID      = $f3->get('POST.domainid');
         $domainName    = $f3->get('POST.domain');
-        if ($adminLevel == '2') {
+        if ($adminLevel == "0") {
             if (empty($recordtype)) {
                 $error = "Record Type Cannot Be Empty";
             }
@@ -954,7 +954,7 @@ class AjaxController extends Controller
                 return;
             }
         }
-        if ($adminLevel == '1' || $adminLevel == '0') {
+        if ($adminLevel == "0" || $adminLevel == "1" || $adminlevel == "2") {
             if ($domainData->checkIsOwner($domainID, $this->f3->get('SESSION.masteraccountid')) == true) {
                 if (empty($recordtype)) {
                     $error = "Record Type Cannot Be Empty";
@@ -995,12 +995,13 @@ class AjaxController extends Controller
         $username          = $postedData['userFullName'];
         $usermasteraccount = $postedData['masterAccount'];
         $maxdomains        = $postedData['userMaxDomains'];
+		$maxaccounts       = $postedData['userMaxAccounts'];
         $userrole          = $postedData['userLevel'];
         $userenabled       = $postedData['userEnabled'];
         $userdisabled      = $postedData['userDisabled'];
         $adminLevel        = $this->f3->get('SESSION.adminlevel');
         $masteraccountid   = $this->f3->get('SESSION.masteraccountid');
-        if ($adminLevel == '2') {
+        if ($adminLevel == "0") {
             $users->getById($userid);
             if ($users->dry()) {
                 $error = "Admin Account Does Not Exist";
@@ -1028,11 +1029,12 @@ class AjaxController extends Controller
                 $useractive = "0";
             }
             
-            $updateduser = $users->updateUser($userid, $useremail, $userrole, $username, $maxdomains, $useractive, $usermasteraccount);
+            $updateduser = $users->updateUser($userid, $useremail, $userrole, $username, $maxdomains, $maxaccounts, $useractive, $usermasteraccount);
 			$this->f3->set('SESSION.masteraccountid', $usermasteraccount);
 			$this->f3->set('SESSION.adminlevel', userrole);
 			$this->f3->set('SESSION.adminleveldesc', $userlevel->getLevelDesc(userrole));
 			$this->f3->set('SESSION.maxdomains', $maxdomains);
+			$this->f3->set('SESSION.maxaccounts', $maxdaccounts);
             if ($updateduser !== false) {
                 http_response_code(200);
                 echo json_encode(array(
@@ -1100,13 +1102,13 @@ class AjaxController extends Controller
         $validate        = new Validate($this->db);
         $postedData      = json_decode($f3->get('BODY'), true);
         $adminLevel      = $this->f3->get('SESSION.adminlevel');
-        $userMaxAccounts = $this->f3->get('SESSION.maxdomains');
+        $userMaxDomains  = $this->f3->get('SESSION.maxdomains');
         $userid          = $postedData['userID'];
-        $useremail       = $postedData['passwordOne'];
-        $username        = $postedData['passwordTwo'];
+        $passwordOne     = $postedData['passwordOne'];
+        $passwordTwo     = $postedData['passwordTwo'];
         $adminLevel      = $this->f3->get('SESSION.adminlevel');
         $masteraccountid = $this->f3->get('SESSION.masteraccountid');
-        if ($adminLevel == '2') {
+        if ($adminLevel == "0") {
             $users->getById($userid);
             if ($users->dry()) {
                 $error = "User Account Does Not Exist";
@@ -1118,7 +1120,7 @@ class AjaxController extends Controller
                 if ($updateduser !== false) {
                     http_response_code(200);
                     echo json_encode(array(
-                        "Message" => "User Password Changed"
+                        "Message" => "Users Password Changed"
                     ));
                 } else {
                     $error = "User Password Not Changed";
@@ -1160,7 +1162,7 @@ class AjaxController extends Controller
                     return;
                 }
                 
-                $updateduser = $users->updateUser($userid, $useremail, $userrole, $username, $maxdomains, $userenabled);
+                $updateduser = $users->updateUser($userid, $useremail, $userrole, $username, $maxdomains, $maxacounts, $userenabled);
                 if ($updateduser !== false) {
                     http_response_code(200);
                     echo json_encode(array(
@@ -1191,7 +1193,7 @@ class AjaxController extends Controller
         $userEmail       = $postedData['userEmail'];
         $adminLevel      = $this->f3->get('SESSION.adminlevel');
         $masteraccountid = $this->f3->get('SESSION.masteraccountid');
-        if ($adminLevel == '2') {
+        if ($adminLevel == "0") {
             if ($users->checkEmailExists($userEmail) == 1) {
                 // Users Email exists in system, send out reset email.
                 $userResetToken = $users->createResetToken();
@@ -1296,11 +1298,12 @@ class AjaxController extends Controller
 		$userFullName    = $postedData["addUserFullName"];
         $userLevel       = $postedData["addUserLevel"];
 		$userMaxDoms     = $postedData["addUserMaxDoms"];
+		$userMaxAccounts = $postedData["addUserMaxAccounts"];
 		$userPassword    = $postedData["addUserPassword"];
 		$userMaster      = $postedData["addUserMaster"];
         $masteraccountid = $this->f3->get('SESSION.masteraccountid');
-        $userenabled     = '1';
-        if ($adminLevel == '2') {
+        $userenabled     = "1";
+        if ($adminLevel == "0") {
             if (empty($useremail)) {
                 $error = "The Users Email Cannot Be Empty";
                 $this->returnError($error);
@@ -1361,7 +1364,7 @@ class AjaxController extends Controller
                 $masteraccountid = $f3->get('SITEMASTERUSERID');
             }
 
-            $adduser    = $users->add($useremail, $userFullName, $userLevel, $userMaxDoms, $userPassword, $userMaster);
+            $adduser    = $users->add($useremail, $userFullName, $userLevel, $userMaxDoms, $userMaxAccounts, $userPassword, $userMaster);
             if ($adduser >= 0) {
                 http_response_code(200);
                 echo json_encode(array(
@@ -1408,7 +1411,7 @@ class AjaxController extends Controller
                 }
             }
             
-            if ($adminLevel == '2') {
+            if ($adminLevel == "0") {
                 $this->returnError("You don't have permission to do that");
             }
             
@@ -1480,7 +1483,7 @@ class AjaxController extends Controller
         $adminLevel = $this->f3->get('SESSION.adminlevel');
         $userid     = $f3->get('POST.userid');
         $useremail  = $f3->get('POST.useremail');
-        if ($adminLevel == '2') {
+        if ($adminLevel == "0") {
             if (empty($userid)) {
                 $error = "A problem occured, please refresh the page.";
             }

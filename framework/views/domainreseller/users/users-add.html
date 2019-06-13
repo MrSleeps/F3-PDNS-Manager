@@ -29,7 +29,7 @@
 											<div class="invalid-feedback">Please enter a valid Email address.</div>
 										</div>
 									</div>
-									<div class="col-sm-12 col-md-6 col-lg-2">
+									<div class="col-sm-12 col-md-6 col-lg-3">
 										<div class="form-group">
 											<label class="form-control-label" for="addUserFullName">Their Name</label>
 											<input type="text" class="form-control" id="addUserFullName" name="addUserFullName" autocomplete="off" placeholder="Their full name" required>
@@ -46,16 +46,10 @@
 											</select>
 										</div>
 									</div>
-									<div class="col-sm-6 col-lg-2">
+									<div class="col-sm-6 col-lg-3">
 										<div class="form-group">
-											<label class="form-control-label" for="addUserMaxDoms">Maximum Domains</label>
-											<input type="number" class="form-control" id="addUserMaxDoms" name="addUserMaxDoms" data-regex="^[0-9]+$" placeholder="0 for unlimited" required>
-										</div>
-									</div>
-									<div class="col-sm-6 col-lg-2">
-										<div class="form-group">
-											<label class="form-control-label" for="addUserMaxAccounts">Maximum Accounts</label>
-											<input type="number" class="form-control" id="addUserMaxAccounts" name="addUserMaxAccounts" data-regex="^[0-9]+$" placeholder="0 for unlimited" required>
+											<label class="form-control-label" for="addUserMaxDoms">Maximum Domains <small>0 for unlimited</small></label>
+											<input type="number" class="form-control" id="addUserMaxDoms" name="addUserMaxDoms" data-regex="^[0-9]+$" required>
 										</div>
 									</div>
 								</div>
@@ -69,7 +63,7 @@
 										</div>
 									</div>
 								<button type="button" class="btn btn-default" id="generatePasswordButton">Generate Password</button>
-									<div class="col-sm-12 col-md-6 col-lg-4">
+									<div class="col-sm-12 col-md-6 col-lg-2">
 										<div class="form-group">
 											<label class="form-control-label" for="addUserMaster">Master Account</label>
 												<select name="adminid" id="addUserMaster" class="form-control" name="addUserLevel" required>

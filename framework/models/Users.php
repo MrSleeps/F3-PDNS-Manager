@@ -31,13 +31,14 @@ class Users extends DB\SQL\Mapper
         ));
     }
     
-    public function add($useremail, $username, $userrole, $maxdomains, $password, $masteraccountid)
+    public function add($useremail, $username, $userrole, $maxdomains, $maxusers, $password, $masteraccountid)
     {
-        $this->userEmail      = $useremail;
-        $this->userName       = $username;
-        $this->userAdminLevel = $userrole;
-        $this->userMaxDomains = $maxdomains;
-        $this->userPassword   = password_hash($password, PASSWORD_DEFAULT);
+        $this->userEmail       = $useremail;
+        $this->userName        = $username;
+        $this->userAdminLevel  = $userrole;
+        $this->userMaxDomains  = $maxdomains;
+		$this->userMaxAccounts = $maxusers;
+        $this->userPassword    = password_hash($password, PASSWORD_DEFAULT);
         
         $this->userEnabled = "1";
         $this->save();
@@ -90,7 +91,7 @@ class Users extends DB\SQL\Mapper
     {
         return $this->count(array(
             'userAdminLevel=?',
-            '2'
+            '0'
         ));
     }
     
@@ -107,6 +108,7 @@ class Users extends DB\SQL\Mapper
     w_users.userEnabled,
     w_users.userMaxDomains,
     w_users.userMasterAccount,
+	w_users.userMaxAccounts,
     w_userlevels.userLevelDesc,
     w_domaindata.domainAdmin,
     w_domaindata.domainMaxRecords,
@@ -125,6 +127,7 @@ Group By
     w_users.userResetTokenExpires,
     w_users.userEnabled,
     w_users.userMaxDomains,
+	w_users.userMaxAccounts,
     w_users.userMasterAccount,
     w_userlevels.userLevelDesc,
     w_domaindata.domainAdmin,
@@ -133,7 +136,7 @@ Group By
     
     public function listAllUsersMasterAccount($masteraccountid)
     {
-        return $this->db->exec('Select w_users.userID, w_users.userEmail, w_users.userName, w_users.userEnabled, w_users.userMaxDomains, w_userlevels.userLevelDesc From w_users Inner Join w_userlevels On w_users.userAdminLevel = w_userlevels.userLevelID WHERE w_users.userMasterAccount=?', $masteraccountid);
+        return $this->db->exec('Select w_users.userID, w_users.userEmail, w_users.userName, w_users.userEnabled, w_users.userMaxDomains, w_users.userMaxAccounts, w_userlevels.userLevelDesc From w_users Inner Join w_userlevels On w_users.userAdminLevel = w_userlevels.userLevelID WHERE w_users.userMasterAccount=?', $masteraccountid);
     }
     
     public function listAllEmails()
@@ -148,7 +151,7 @@ Group By
         return $this->db->exec('SELECT userID, userEmail, UserMasterAccount from w_users WHERE userMasterAccount=? ORDER BY userEmail ASC', $masteraccountid);
     }
     
-    public function updateUser($userid, $useremail, $userrole, $username, $maxnumber, $userenabled, $usermasteraccount)
+    public function updateUser($userid, $useremail, $userrole, $username, $maxnumber, $maxaccounts, $userenabled, $usermasteraccount)
     {
         $users = new Users($this->db);
         $this->load(array(
@@ -161,6 +164,7 @@ Group By
         $this->userAdminLevel    = $userrole;
         $this->userEmail         = $useremail;
         $this->userMasterAccount = $usermasteraccount;
+		$this->userMaxAccounts   = $maxaccounts;
         $this->userEnabled       = $userenabled;
         $this->save();
         return $useremail;

@@ -55,7 +55,7 @@ Getting these installed and working is beyond the scope of this readme, there ar
 
 ## Installing
 
-Read the INSTALL.md in the install folder (once I have written it.)
+Read the INSTALL.md in the install folder
 
 ## Built With
 
@@ -68,6 +68,7 @@ Read the INSTALL.md in the install folder (once I have written it.)
 * [DataTables](https://datatables.net)
 * [Select2](select2.github.io)
 * [X-Editable](https://vitalets.github.io/x-editable/)
+* [Bootstrap-ZXCVBN](https://github.com/routekick/bootstrap-zxcvbn) (modified)
 
 
 **HTML/CSS**

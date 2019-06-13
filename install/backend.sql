@@ -49,6 +49,7 @@ CREATE TABLE `w_users` (
   `userResetTokenExpires` datetime DEFAULT NULL,
   `userEnabled` int(1) NOT NULL,
   `userMaxDomains` int(11) NOT NULL DEFAULT '0',
+  `userMaxAccounts` int(11) NOT NULL DEFAULT '0',
   `userMasterAccount` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

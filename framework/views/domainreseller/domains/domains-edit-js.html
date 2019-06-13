@@ -1,0 +1,412 @@
+<script type="text/javascript" src="/assets/node_modules/pnotify/dist/iife/PNotify.js"></script>
+<script type="text/javascript" src="/assets/node_modules/pnotify/dist/iife/PNotifyButtons.js"></script>
+<script src="/assets/bower_components/select2/dist/js/select2.old.min.js"></script>
+<script src="/assets/node_modules/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/assets/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/assets/node_modules/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/assets/node_modules/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
+<script src="/assets/node_modules/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/assets/node_modules/datatables.net-buttons/js/buttons.flash.min.js"></script>
+<script src="/assets/node_modules/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/assets/node_modules/datatables.net-select/js/dataTables.select.min.js"></script>
+<script src="/assets/js/bootstrap-editable.min.js"></script>
+<script>
+$(document).ready(function() {
+    var e, a = $("#datatable-records");
+    a.length && (e = {
+        lengthChange: !1,
+        "pageLength": 50,
+        dom: "Bfrtip",
+        buttons: ["copy", "print"],
+        language: {
+            paginate: {
+                previous: "<i class='fas fa-angle-left'>",
+                next: "<i class='fas fa-angle-right'>"
+            }
+        }
+    }, a.on("init.dt", function() {
+        $(".dt-buttons .btn").removeClass("btn-secondary").addClass("btn-sm btn-default")
+    }).DataTable(e))
+});
+</script>
+<script>
+$(document).ready(function() {
+    var stack_center = {
+        "dir1": "down",
+        "dir2": "right",
+        "firstpos1": 25,
+        "firstpos2": ($(window).width() / 2 - 150)
+    };
+    PNotify.defaults.styling = 'bootstrap4';
+    $('.editable').editable({
+        params: function(params) {
+            var lineid = $(this).data("linenumber");
+            var data = {};
+            data.pk = params.pk;
+            data.name = params.name;
+            data.value = params.value;
+            data.recordtype = $("#recordtype" + lineid).data('value');
+            return data;
+        },
+        success: function(response, newValue) {
+            if (response.status == 'error') PNotify.error({
+                title: 'Error!',
+                text: response.msg,
+                type: 'error',
+                icon: false,
+                addclass: "stack_center",
+                stack: stack_center
+            });
+            if (response.status == 'ok') PNotify.success({
+                title: 'Done!',
+                text: response.msg,
+                type: 'success',
+                icon: false,
+                addclass: "stack_center",
+                stack: stack_center
+            });
+        }
+    });
+    $('.editable-type').editable({
+        source: [{
+            id: 'A',
+            text: 'A'
+        }, {
+            id: 'AAAA',
+            text: 'AAAA'
+        }, {
+            id: 'AFSDB',
+            text: 'AFSDB'
+        }, {
+            id: 'CERT',
+            text: 'CERT'
+        }, {
+            id: 'CNAME',
+            text: 'CNAME'
+        }, {
+            id: 'DHCID',
+            text: 'DHCID'
+        }, {
+            id: 'DLV',
+            text: 'DLV'
+        }, {
+            id: 'DNSKEY',
+            text: 'DNSKEY'
+        }, {
+            id: 'DS',
+            text: 'DS'
+        }, {
+            id: 'EUI48',
+            text: 'EUI48'
+        }, {
+            id: 'EUI64',
+            text: 'EUI64'
+        }, {
+            id: 'HINFO',
+            text: 'HINFO'
+        }, {
+            id: 'IPSECKEY',
+            text: 'IPSECKEY'
+        }, {
+            id: 'KEY',
+            text: 'KEY'
+        }, {
+            id: 'KX',
+            text: 'KX'
+        }, {
+            id: 'LOC',
+            text: 'LOC'
+        }, {
+            id: 'MINFO',
+            text: 'MINFO'
+        }, {
+            id: 'MR',
+            text: 'MR'
+        }, {
+            id: 'MX',
+            text: 'MX'
+        }, {
+            id: 'NAPTR',
+            text: 'NAPTER'
+        }, {
+            id: 'NS',
+            text: 'NS'
+        }, {
+            id: 'NSEC',
+            text: 'NSEC'
+        }, {
+            id: 'NSEC3',
+            text: 'NSEC3'
+        }, {
+            id: 'NSEC3PARAM',
+            text: 'NSEC3PARAM'
+        }, {
+            id: 'OPT',
+            text: 'OPT'
+        }, {
+            id: 'PTR',
+            text: 'PTR'
+        }, {
+            id: 'RKEY',
+            text: 'RKEY'
+        }, {
+            id: 'RP',
+            text: 'RP'
+        }, {
+            id: 'RRSIG',
+            text: 'RRSIG'
+        }, {
+            id: 'SPF',
+            text: 'SPF'
+        }, {
+            id: 'SRV',
+            text: 'SRV'
+        }, {
+            id: 'SSHFP',
+            text: 'SSHFP'
+        }, {
+            id: 'TLSA',
+            text: 'TLSA'
+        }, {
+            id: 'TSIG',
+            text: 'TSIG'
+        }, {
+            id: 'TXT',
+            text: 'TXT'
+        }, {
+            id: 'WKS',
+            text: 'WKS'
+        }],
+        select2: {
+            multiple: false
+        }
+    });
+
+
+    $('#addRecordButton').on('click', function() {
+        addRecord();
+    });
+
+    $('#updateSOAButton').on('click', function() {
+        updateSOA();
+    });
+
+    var availableRecordTypes = [
+        "A", "AAAA", "AFSDB", "CERT", "CNAME", "DHCID",
+        "DLV", "DNSKEY", "DS", "EUI48", "EUI64", "HINFO",
+        "IPSECKEY", "KEY", "KX", "LOC", "MINFO", "MR",
+        "MX", "NAPTR", "NS", "NSEC", "NSEC3", "NSEC3PARAM",
+        "OPT", "PTR", "RKEY", "RP", "RRSIG", "SPF",
+        "SRV", "SSHFP", "TLSA", "TSIG", "TXT", "WKS"
+    ];
+
+    var placeholder = $(this).data('placeholder') || 'Choose a Type';
+    $('#addRecordType').select2({
+
+        width: 'style',
+        placeholder: placeholder
+    });
+	
+    $('#newOwner').select2({
+
+        width: 'style'
+    });	
+
+    Select2 = function() {
+        var e = $('[data-toggle="select"]');
+        e.length && e.each(function() {
+            $(this).select2({
+                placeholder: placeholder
+            })
+        })
+    }()
+
+    function addRecord() {
+        var url = window.location.pathname.split('/').slice(1);
+        var domainName = $('#domainNameText').text();
+        var prio = $('#addPriority').val();
+        if (prio.length === 0) prio = 0;
+        var ttl = $('#addTTL').val();
+        if (ttl.length === 0) ttl = 86400;
+        var content = $('#addContent').val();
+        if (content.length === 0) content = domainName;
+        var data = {
+            type: $('#addRecordType').val(),
+            content: content,
+            prio: prio,
+            ttl: ttl,
+            action: "addRecord",
+            domain: url[2],
+            csrfToken: $('#csrfToken').text()
+        };
+
+        if ($('#addName').val().length > 0) {
+            data.name = $('#addName').val() + "." + domainName;
+        } else {
+            data.name = domainName;
+        }
+
+        $.ajax({
+            url: '/ajax/records/add',
+            method: 'POST',
+            data: data
+        }).done(function(dataRecv) {
+            var jsonreply = $.parseJSON(dataRecv);
+            $('<tr></tr>').appendTo('#datatable-records>tbody')
+                .append('<td>' + jsonreply.newid + '</td>')
+                .append('<td>' + data.name + '</td>')
+                .append('<td>' + data.type + '</td>')
+                .append('<td class="wrap-all-words">' + data.content + '</td>')
+                .append('<td>' + data.prio + '</td>')
+                .append('<td>' + data.ttl + '</td>');
+            document.getElementById("soaserial").value = jsonreply.newserial;
+            PNotify.success({
+                title: 'Record Added!',
+                text: 'Your record has been added',
+                type: 'success',
+                icon: false
+            });
+        }).fail(function(errorMsg) {
+            PNotify.error({
+                title: 'Error!',
+                text: errorMsg.responseText,
+                type: 'error',
+                icon: false,
+                addclass: "stack_center",
+                stack: stack_center
+            });
+
+        });
+    }
+
+    function updateSOA() {
+        var domainid = $("#domainID").val();
+        var domainName = $("#domainnametext").text();
+        var soaprimary = $("#soaprimary").val();
+        var soamail = $("#soamail").val();
+        var soarefresh = $("#soarefresh").val();
+        var soaretry = $("#soaretry").val();
+        var soaexpire = $("#soaexpire").val();
+        var soattl = $("#soattl").val();
+        var soaserial = $("#soaserial").val();
+        var data = {
+            domainid: domainid,
+            domainname: domainName,
+            soaPrimary: soaprimary,
+            soaMail: soamail,
+            soaRefresh: soarefresh,
+            soaRetry: soaretry,
+            soaExpire: soaexpire,
+            soaTtl: soattl,
+            soaSerial: soaserial,
+            csrfToken: $('#csrfToken').text()
+        };
+
+        $.ajax({
+            url: '/ajax/records/soaupdate',
+            method: 'POST',
+            data: data
+        }).done(function(dataRecv) {
+            //var jsonreply = $.parseJSON(dataRecv);
+            document.getElementById("soaserial").value = dataRecv.newserial;
+            PNotify.success({
+                title: 'SOA Updated',
+                text: 'Domain SOA record has been updated',
+                type: 'success',
+                icon: false
+            });
+        }).fail(function(errorMsg) {
+            PNotify.error({
+                title: 'Error!',
+                text: errorMsg.responseText,
+                type: 'error',
+                icon: false
+            });
+        });
+    }
+	
+    $("#changeOwnerButton").click(function() {
+        var data = {
+            newOwner: $('#newOwner').val(),
+			currentOwner: $('#currentOwner').val(),
+			cDomainID: $('#cDomainID').val(),
+			newEmail: $("#newOwner option:selected").text(),
+            csrfToken: $('#csrfToken').text()
+        };
+        $.ajax({
+            type: 'POST',
+            url: "/ajax/domains/changeowner",
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function(data) {
+                PNotify.success({
+                    title: 'Success!',
+                    text: data.Message,
+                    type: 'error',
+                    icon: false,
+                    addclass: "stack_center",
+                    stack: stack_center
+                });
+				$('#soamail').val(data.newOwnerEmail);
+            },
+            error: function(response) {
+                PNotify.error({
+                    title: 'Error!',
+                    text: response.responseText,
+                    type: 'error',
+                    icon: false,
+                    addclass: "stack_center",
+                    stack: stack_center
+                });
+            }
+        });
+        return false;
+    });	
+
+    $('#confirmRecordDelete').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget)
+        var recordid = button.data('recordid') // Extract info from data-* attributes
+        var recordname = button.data('recordname')
+        var recordtype = button.data('recordtype')
+        var recordcontent = button.data('recordcontent')
+        var thedomain = button.data('thedomain')
+        var domainid = button.data('domainid')
+        var tablerowid = '#row' + recordid
+        var content = 'Are you sure want to delete the <b>' + recordtype + '</b> record: <b>' + recordname + '</b> which points to <b>' + recordcontent + '</b> ?'
+        var modal = $(this)
+        modal.find('.modal-body').html(content)
+        $("#confirmDelBtn").unbind("click").click(function(e) {
+            var data = {
+                id: recordid,
+                type: recordtype,
+                content: recordcontent,
+                domain: thedomain,
+                name: recordname,
+                domainid: domainid,
+                csrfToken: $('#csrfToken').text()
+            };
+
+            $.ajax({
+                url: '/ajax/records/delete',
+                method: 'POST',
+                data: data
+            }).done(function(data) {
+                $('#confirmRecordDelete').modal('hide');
+                $(tablerowid).closest('tr').remove();
+                PNotify.success({
+                    title: 'Record Deleted!',
+                    text: 'Your record has been delted',
+                    type: 'success',
+                    icon: false
+                });
+            }).fail(function(errorMsg) {
+                PNotify.error({
+                    title: 'Error!',
+                    text: errorMsg.responseText,
+                    type: 'error',
+                    icon: false
+                });
+            });
+        });
+    });
+});</script>

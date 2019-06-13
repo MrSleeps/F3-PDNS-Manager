@@ -1,0 +1,88 @@
+<div class="main-content">
+	<!-- Top navbar -->
+	<include href="{{@PAGETOPNAV}}" />
+	<!-- Header -->
+	<div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+		<div class="container-fluid">
+			<div class="header-body">
+				<!-- Card stats -->
+			</div>
+		</div>
+	</div>
+	<!-- Page content -->
+	<div class="container-fluid mt--7">
+		<div class="row mt-5">
+			<div class="col">
+				<div class="card bg-default shadow">
+					<div class="card-header bg-transparent border-0">
+						<h3 class="text-white mb-0">Current Users</h3>
+					</div>
+					<div class="table-responsive">
+						<table class="table align-items-center table-dark table-flush"  id="datatable-records">
+							<thead class="thead-dark">
+								<tr>
+									<th scope="col" class=".d-none .d-sm-block">ID</th>
+									<th scope="col">Name</th>
+									<th scope="col" class=".d-none .d-sm-block">Type</th>
+									<th scope="col" class=".d-none .d-sm-block">Domains</th>
+									<th scope="col"></th>
+								</tr>
+							</thead>
+							<tbody>
+								<repeat group="{{@USERLIST}}" value="{{@ul}}">
+									<tr id="row{{@ul.userID}}">
+										<td class=".d-none .d-sm-block">{{@ul.userID}}</td>
+										<td>{{ @ul.userEmail }}</td>
+										<td class=".d-none .d-sm-block">{{@ul.userLevelDesc}}</td>
+										<td class="text-center">{{@ul.domainCount}}</td>
+										<td class="text-center">
+											<a href="/users/edit/{{@ul.userID}}" class="btn btn-sm btn-info" role="button">
+												<span class="hidden-md-down">Edit&nbsp;&nbsp;</span>
+												<i class="fa fa-edit"></i>
+											</a>
+											<button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#confirmUserDelete" data-userid="{{@ul.userID}}" data-useremail="{{@ul.userEmail}}">
+												<span class="hidden-md-down">Delete&nbsp;&nbsp;</span>
+												<span class="fa fa-trash"></span>
+											</button>
+										</td>
+									</tr>
+								</repeat>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Footer -->
+		<include href="{{@PAGEFOOTER}}" />
+	</div>
+</div>
+<div class="col-md-4">
+	<div class="modal fade" id="confirmUserDelete" tabindex="-1" role="dialog" aria-labelledby="confirmDomainDelete" aria-hidden="true">
+		<div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+			<div class="modal-content bg-gradient-danger">
+				<div class="modal-header">
+					<h6 class="modal-title" id="modal-title-notification">Your attention is required</h6>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="py-3 text-center">
+						<i class="fas fa-exclamation-circle fa-5x"></i>
+						<h4 class="heading mt-4">
+							<span id="modalUserEmail"></span>
+						</h4>
+						<p>
+							<span id="modalDeleteContent"></span>
+						</p>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-white" id="confirmDelBtn">Yes</button>
+					<button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal">No</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

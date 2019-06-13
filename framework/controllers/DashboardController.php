@@ -26,19 +26,28 @@ class DashboardController extends Controller
         $maxdomains      = $this->f3->get('SESSION.maxdomains');
         $masteraccountid = $this->f3->get('SESSION.masteraccountid');
         switch ($adminlevel) {
-            case 1:
-                // Domain Admin
-                $urlslug = "domainadmin/";
-                break;
-            
-            case 2:
+            case 0:
                 // Site Admin
                 $urlslug = "siteadmin/";
                 break;
+
+			case 1:
+                // Domain Reseller
+                $urlslug = "domainreseller/";
+                break;
+				
+			case 2:
+                // Domain Admin
+                $urlslug = "domainadmin/";
+                break;
+				
+			case 3:
+				// Normal User
+				$urlslug = "domainuser/";
+				break;
             
             default:
-                // Normal User
-                $urlslug = "domainuser/";
+                // Not Listed
                 break;
         }
         
@@ -51,7 +60,7 @@ class DashboardController extends Controller
         {
             return inet_ntop($ip);
         });
-        if ($adminlevel == "2") {
+        if ($adminlevel == "0") {
             
             // Site Admin
             $recordtypecount = $records->countByType();
@@ -162,7 +171,18 @@ class DashboardController extends Controller
             $this->f3->set('PAGEFOOTER', 'dashboard/footer.html');
             $this->f3->set('DOMAINSCOUNT', $userdomainscount);
             $this->f3->set('USERSCOUNT', $userscount);
-        } //echo '<pre>'; var_dump($_SESSION); echo '</pre>';echo $this->db->log();
+        } 
+
+		if($adminlevel == "0") {
+			// Normal Domain User
+            $this->f3->set('PAGECONTENT', $urlslug . 'dashboard/dashboard-content.html');
+            $this->f3->set('PAGESIDEMENU', $urlslug . 'sidemenu.html');
+            $this->f3->set('PAGEJAVASCRIPT', $urlslug . 'dashboard/dashboard-js.html');
+            $this->f3->set('PAGECSS', $urlslug . 'dashboard/dashboard-css.html');
+            $this->f3->set('PAGETOPNAV', $urlslug . 'dashboard/dashboard-header-nav.html');
+            $this->f3->set('PAGETOPNAVMOBILE', $urlslug . 'dashboard/dashboard-header-nav-mobile.html');
+            $this->f3->set('PAGEFOOTER', 'dashboard/footer.html');
+		}//echo '<pre>'; var_dump($_SESSION); echo '</pre>';echo $this->db->log();
         echo $template->render('dashboard/index-template.html');
     }
     
@@ -180,19 +200,28 @@ class DashboardController extends Controller
         $maxdomains      = $this->f3->get('SESSION.maxdomains');
         $masteraccountid = $this->f3->get('SESSION.masteraccountid');
         switch ($adminlevel) {
-            case 1:
-                // Domain Admin
-                $urlslug = "domainadmin/";
-                break;
-            
-            case 2:
+            case 0:
                 // Site Admin
                 $urlslug = "siteadmin/";
                 break;
+
+			case 1:
+                // Domain Reseller
+                $urlslug = "domainreseller/";
+                break;
+				
+			case 2:
+                // Domain Admin
+                $urlslug = "domainadmin/";
+                break;
+				
+			case 3:
+				// Normal User
+				$urlslug = "domainuser/";
+				break;
             
             default:
-                // Normal User
-                $urlslug = "domainuser/";
+                // Not Listed
                 break;
         }
         
@@ -205,7 +234,7 @@ class DashboardController extends Controller
         {
             return idn_to_utf8($domain);
         });
-        if ($adminlevel == "2") {
+        if ($adminlevel == "0") {
             // Site Admin
             $alldomains = $domains->listAllDomains();
             if (count($alldomains) == "0") {
@@ -255,19 +284,28 @@ class DashboardController extends Controller
         $adminlevel    = $this->f3->get('SESSION.adminlevel');
         $userleveldesc = $this->f3->get('SESSION.adminleveldesc');
         switch ($adminlevel) {
-            case 1:
-                // Domain Admin
-                $urlslug = "domainadmin/";
-                break;
-            
-            case 2:
+            case 0:
                 // Site Admin
                 $urlslug = "siteadmin/";
                 break;
+
+			case 1:
+                // Domain Reseller
+                $urlslug = "domainreseller/";
+                break;
+				
+			case 2:
+                // Domain Admin
+                $urlslug = "domainadmin/";
+                break;
+				
+			case 3:
+				// Normal User
+				$urlslug = "domainuser/";
+				break;
             
             default:
-                // Normal User
-                $urlslug = "domainuser/";
+                // Not Listed
                 break;
         }
         
@@ -276,7 +314,7 @@ class DashboardController extends Controller
         $this->f3->set('MENUACTIVE', 'DOMAINS');
         $this->f3->set('USERSNAME', $this->f3->get('SESSION.realname'));
         $this->f3->set('USERSEMAIL', $this->f3->get('SESSION.email'));
-        if ($adminlevel == "2") {
+        if ($adminlevel == "0") {
             
             // Site Admin
             $useremails = $users->listAllEmails();
@@ -326,19 +364,28 @@ class DashboardController extends Controller
         $maxdomains      = $this->f3->get('SESSION.maxdomains');
         $masteraccountid = $this->f3->get('SESSION.masteraccountid');
         switch ($adminlevel) {
-            case 1:
-                // Domain Admin
-                $urlslug = "domainadmin/";
-                break;
-            
-            case 2:
+            case 0:
                 // Site Admin
                 $urlslug = "siteadmin/";
                 break;
+
+			case 1:
+                // Domain Reseller
+                $urlslug = "domainreseller/";
+                break;
+				
+			case 2:
+                // Domain Admin
+                $urlslug = "domainadmin/";
+                break;
+				
+			case 3:
+				// Normal User
+				$urlslug = "domainuser/";
+				break;
             
             default:
-                // Normal User
-                $urlslug = "domainuser/";
+                // Not Listed
                 break;
         }
         
@@ -360,7 +407,7 @@ class DashboardController extends Controller
             $email  = $user . '@' . $domain;
             return $email;
         });
-        if ($adminlevel == "2") {
+        if ($adminlevel == "0") {
             // Site Admin
             $domains->getById($domainid);
             if ($domains->dry()) {
@@ -443,19 +490,28 @@ class DashboardController extends Controller
         $adminlevel    = $this->f3->get('SESSION.adminlevel');
         $userleveldesc = $this->f3->get('SESSION.adminleveldesc');
         switch ($adminlevel) {
-            case 1:
-                // Domain Admin
-                $urlslug = "domainadmin/";
-                break;
-            
-            case 2:
+            case 0:
                 // Site Admin
                 $urlslug = "siteadmin/";
                 break;
+
+			case 1:
+                // Domain Reseller
+                $urlslug = "domainreseller/";
+                break;
+				
+			case 2:
+                // Domain Admin
+                $urlslug = "domainadmin/";
+                break;
+				
+			case 3:
+				// Normal User
+				$urlslug = "domainuser/";
+				break;
             
             default:
-                // Normal User
-                $urlslug = "domainuser/";
+                // Not Listed
                 break;
         }
         
@@ -468,7 +524,7 @@ class DashboardController extends Controller
         {
             return idn_to_utf8($domain);
         });
-        if ($adminlevel == "2") {
+        if ($adminlevel == "0") {
             // Site Admin
             $allusers = $users->listAllUsers();
             if (count($allusers) == "0") {
@@ -520,19 +576,28 @@ class DashboardController extends Controller
         $adminlevel    = $this->f3->get('SESSION.adminlevel');
         $userleveldesc = $this->f3->get('SESSION.adminleveldesc');
         switch ($adminlevel) {
-            case 1:
-                // Domain Admin
-                $urlslug = "domainadmin/";
-                break;
-            
-            case 2:
+            case 0:
                 // Site Admin
                 $urlslug = "siteadmin/";
                 break;
+
+			case 1:
+                // Domain Reseller
+                $urlslug = "domainreseller/";
+                break;
+				
+			case 2:
+                // Domain Admin
+                $urlslug = "domainadmin/";
+                break;
+				
+			case 3:
+				// Normal User
+				$urlslug = "domainuser/";
+				break;
             
             default:
-                // Normal User
-                $urlslug = "domainuser/";
+                // Not Listed
                 break;
         }
         
@@ -542,7 +607,7 @@ class DashboardController extends Controller
         $this->f3->set('MENUACTIVE', 'USERSS');
         $this->f3->set('USERSNAME', $this->f3->get('SESSION.realname'));
         $this->f3->set('USERSEMAIL', $this->f3->get('SESSION.email'));
-        if ($adminlevel == "2") {
+        if ($adminlevel == "0") {
             // Site Admin
             $users->getById($userid);
             if ($users->dry()) {
@@ -562,6 +627,7 @@ class DashboardController extends Controller
             $this->f3->set('USERADMINLEVEL', $users->userAdminLevel);
             $this->f3->set('USERENABLED', $users->userEnabled);
             $this->f3->set('USERMAXDOM', $users->userMaxDomains);
+			$this->f3->set('USERMAXACC', $users->userMaxAccounts);
 			$this->f3->set('USERMASTERID', $users->userMasterAccount);
             $this->f3->set('USERID', $userid);
             $this->f3->set('USERDOMLIST', $userdomains);
@@ -633,19 +699,28 @@ class DashboardController extends Controller
         $adminlevel    = $this->f3->get('SESSION.adminlevel');
         $userleveldesc = $this->f3->get('SESSION.adminleveldesc');
         switch ($adminlevel) {
-            case 1:
-                // Domain Admin
-                $urlslug = "domainadmin/";
-                break;
-            
-            case 2:
+            case 0:
                 // Site Admin
                 $urlslug = "siteadmin/";
                 break;
+
+			case 1:
+                // Domain Reseller
+                $urlslug = "domainreseller/";
+                break;
+				
+			case 2:
+                // Domain Admin
+                $urlslug = "domainadmin/";
+                break;
+				
+			case 3:
+				// Normal User
+				$urlslug = "domainuser/";
+				break;
             
             default:
-                // Normal User
-                $urlslug = "domainuser/";
+                // Not Listed
                 break;
         }
         
@@ -654,7 +729,7 @@ class DashboardController extends Controller
         $this->f3->set('MENUACTIVE', 'USERS');
         $this->f3->set('USERSNAME', $this->f3->get('SESSION.realname'));
         $this->f3->set('USERSEMAIL', $this->f3->get('SESSION.email'));
-        if ($adminlevel == "2") {
+        if ($adminlevel == "0") {
             // Site Admin
 			$availableLevels = $levels->all();
 			$useremails = $users->listAllEmails();
@@ -703,19 +778,28 @@ class DashboardController extends Controller
         $maxdomains      = $this->f3->get('SESSION.maxdomains');
         $masteraccountid = $this->f3->get('SESSION.masteraccountid');
         switch ($adminlevel) {
-            case 1:
-                // Domain Admin
-                $urlslug = "domainadmin/";
-                break;
-            
-            case 2:
+            case 0:
                 // Site Admin
                 $urlslug = "siteadmin/";
                 break;
+
+			case 1:
+                // Domain Reseller
+                $urlslug = "domainreseller/";
+                break;
+				
+			case 2:
+                // Domain Admin
+                $urlslug = "domainadmin/";
+                break;
+				
+			case 3:
+				// Normal User
+				$urlslug = "domainuser/";
+				break;
             
             default:
-                // Normal User
-                $urlslug = "domainuser/";
+                // Not Listed
                 break;
         }
         
@@ -728,7 +812,7 @@ class DashboardController extends Controller
         {
             return inet_ntop($ip);
         });
-        if ($adminlevel == "2") {
+        if ($adminlevel == "0") {
             
             // Site Admin
             $domainscount = $domains->countDomains();
@@ -828,19 +912,28 @@ class DashboardController extends Controller
         $maxdomains      = $this->f3->get('SESSION.maxdomains');
         $masteraccountid = $this->f3->get('SESSION.masteraccountid');
         switch ($adminlevel) {
-            case 1:
-                // Domain Admin
-                $urlslug = "domainadmin/";
-                break;
-            
-            case 2:
+            case 0:
                 // Site Admin
                 $urlslug = "siteadmin/";
                 break;
+
+			case 1:
+                // Domain Reseller
+                $urlslug = "domainreseller/";
+                break;
+				
+			case 2:
+                // Domain Admin
+                $urlslug = "domainadmin/";
+                break;
+				
+			case 3:
+				// Normal User
+				$urlslug = "domainuser/";
+				break;
             
             default:
-                // Normal User
-                $urlslug = "domainuser/";
+                // Not Listed
                 break;
         }
         
@@ -853,7 +946,7 @@ class DashboardController extends Controller
         {
             return inet_ntop($ip);
         });
-        if ($adminlevel == "2") {
+        if ($adminlevel == "0") {
             
             // Site Admin
             $domainscount = $domains->countDomains();

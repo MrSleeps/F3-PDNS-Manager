@@ -1,0 +1,78 @@
+<script type="text/javascript" src="/assets/node_modules/pnotify/dist/iife/PNotify.js"></script>
+<script type="text/javascript" src="/assets/node_modules/pnotify/dist/iife/PNotifyButtons.js"></script>
+<script src="/assets/node_modules/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/assets/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/assets/node_modules/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/assets/node_modules/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
+<script src="/assets/node_modules/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/assets/node_modules/datatables.net-buttons/js/buttons.flash.min.js"></script>
+<script src="/assets/node_modules/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/assets/node_modules/datatables.net-select/js/dataTables.select.min.js"></script>
+<script>
+$(document).ready(function() {
+    var e, a = $("#datatable-records");
+    a.length && (e = {
+        lengthChange: !1,
+        "pageLength": 50,
+        dom: "Bfrtip",
+        buttons: ["copy", "print"],
+        language: {
+            paginate: {
+                previous: "<i class='fas fa-angle-left'>",
+                next: "<i class='fas fa-angle-right'>"
+            }
+        }
+    }, a.on("init.dt", function() {
+        $(".dt-buttons .btn").removeClass("btn-secondary").addClass("btn-sm btn-default")
+    }).DataTable(e))
+    var stack_center = {
+        "dir1": "down",
+        "dir2": "right",
+        "firstpos1": 25,
+        "firstpos2": ($(window).width() / 2 - 150)
+    };
+    $('#confirmUserDelete').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget)
+        var userid = button.data('userid') // Extract info from data-* attributes
+        var useremail = button.data('useremail')
+        var tablerowid = '#row' + userid
+        var content = 'Are you sure want to delete <b>' + useremail + '</b>?'
+        var modal = $(this)
+        modal.find('#modalUserEmail').html(useremail)
+        modal.find('#modalDeleteContent').html(content)
+        $("#confirmDelBtn").unbind("click").click(function(e) {
+            var data = {
+                userid: userid,
+                useremail: useremail,
+                csrfToken: $('#csrfToken').text()
+            };
+
+            $.ajax({
+                url: '/ajax/users/delete',
+                method: 'POST',
+                data: data
+            }).done(function(data) {
+                $('#confirmUserDelete').modal('hide');
+                $(tablerowid).closest('tr').remove();
+                PNotify.success({
+                    title: 'User Deleted!',
+                    text: 'The user has been deleted.',
+                    type: 'success',
+                    icon: false,
+                    addclass: "stack_center",
+                    stack: stack_center
+                })
+            }).fail(function(errorMsg) {
+                PNotify.error({
+                    title: 'Error!',
+                    text: errorMsg.responseText,
+                    type: 'error',
+                    icon: false,
+                    addclass: "stack_center",
+                    stack: stack_center
+                });
+            });
+        });
+    });
+});
+</script>

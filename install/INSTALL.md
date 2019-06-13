@@ -1,6 +1,6 @@
 #Install Instructions
 
-*Before you start, you will need PowerDNS up and running with the MySQL backend. Installing this is down to you, there are plenty of tutorials out there that will get you up and running in a short space of time.*
+*Before you start, you will need PowerDNS up and running with the MySQL backend. You will also need Nginx or Apache (sample configs are included). Installing this is down to you, there are plenty of tutorials out there that will get you up and running in a short space of time.*
 
 So, on to installation.
 
@@ -15,7 +15,7 @@ mysql> GRANT ALL PRIVILEGES ON database_name.* TO 'username'@'localhost' IDENTIF
 
 Hopefully, you will see no errors.
 
-Upload everything to your server, setup your nginx/apache virtual host to point to www directory, an example NGINX config is included in the install directory. You will need to be hosting this on an HTTPS server, so get yourself an SSL certificate. Then, in the root directory create a directory called temp and **give the webserver write access to it** (this is where the template and other temporary files are stored).
+Upload everything to your server, setup your nginx/apache virtual host to point to www directory, an example NGINX config and Apache .htaccess are included in the install directory. You will need to be hosting this on an HTTPS server, so get yourself an SSL certificate. Then, in the root directory create a directory called temp and **give the webserver write access to it, chown is the safest option, don't CHMOD 777 - that's just idiotic** (this is where the template and other temporary files are stored). Setting up your webserver isn't in the scope of this document.
 
 In the config directory (outside of your webroot) copy the config.ini.sample file to config.ini, open up your editor and get cracking on changing what's in the file. You will need to add your Database Details, SMTP details (remove the << >> bits). It's fairly self explanatory, but if you are stuck the important bits are:
 

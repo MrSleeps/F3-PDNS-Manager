@@ -1,0 +1,267 @@
+<div class="main-content">
+	<!-- Top navbar -->
+	<include href="{{@PAGETOPNAV}}" />
+	<!-- Header -->
+	<div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+		<div class="container-fluid">
+			<div class="header-body">
+				<!-- Card stats -->
+			</div>
+		</div>
+	</div>
+	<!-- Page content -->
+	<div class="container-fluid mt--7">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="card mb-4">
+					<!-- Card header -->
+					<div class="card-header">
+						<h3 class="mb-0">Edit 
+							<span id="domainNameText">{{@DOMAINNAME}}</span>
+						</div>
+						<!-- Card body -->
+						<div class="card-body">
+							<div class="row">
+								<div class="col-sm-6 col-md-6 col-lg-3">
+									<div class="form-group">
+										<label for="soa-primary" class="form-control-label">Primary</label>
+										<input type="text" class="form-control form-control-alternative" name="soa-primary" id="soaprimary" placeholder="Primary" autocomplete="off" data-regex="^([^.]+\.)*[^.]+$" tabindex="1" value="{{ @idn_to_utf8(@SOAPRIMARY) }}">
+									</div>
+								</div>
+								<div class="col-sm-6 col-md-6 col-lg-3">
+									<div class="form-group">
+										<label for="soa-mail" class="form-control-label">Email</label>
+										<input name="soa-mail" type="text" class="form-control form-control-alternative" id="soamail" placeholder="Email" autocomplete="off" data-regex="^.+@[^.]+(\.[^.]+)*$" tabindex="2" value="{{ @idn_to_utf8_email(@SOAEMAIL) }}">
+									</div>
+								</div>
+								<div class="col-sm-6 col-md-6 col-lg-3">
+									<div class="form-group">
+										<label for="soa-refresh" class="form-control-label">Refresh</label>
+										<input name="soa-refresh" type="text" class="form-control form-control-alternative" id="soarefresh" placeholder="Refresh" autocomplete="off" data-regex="^[0-9]+$" tabindex="3" value="{{@SOAREFRESH}}">
+									</div>
+								</div>
+								<div class="col-sm-6 col-md-6 col-lg-3">
+									<div class="form-group">
+										<label for="soa-retry" class="form-control-label">Retry</label>
+										<input name="soa-retry" type="text" class="form-control form-control-alternative" id="soaretry" placeholder="Retry" autocomplete="off" data-regex="^[0-9]+$" tabindex="4" value="{{@SOARETRY}}">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-6 col-md-6 col-lg-3">
+										<div class="form-group">
+											<label for="soa-ttl" class="form-control-label">TTL</label>
+											<input name="soa-ttl" type="text" class="form-control form-control-alternative" id="soattl" placeholder="TTL" autocomplete="off" data-regex="^[0-9]+$" tabindex="6" value="{{@SOATTL}}">
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-6 col-lg-3">
+										<div class="form-group">
+											<label for="soa-serial" class="control-label">Serial</label>
+											<input name="soa-serial" type="text" class="form-control" id="soaserial" placeholder="Serial" disabled data-regex=".*"  value="{{@SOASERIAL}}">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="form-group">
+											<button type="button" class="btn btn-primary float-right" id="updateSOAButton">Save</button>
+										</div>
+									</div>
+								</div>
+								<hr class="my-4" />
+								<h6 class="heading-small text-muted mb-4">Contact information</h6>
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="table-responsive">
+											<table class="table table-flush table-sm" id="datatable-records">
+												<thead class="thead-light">
+													<tr>
+														<th>ID</th>
+														<th>Name</th>
+														<th>Type</th>
+														<th>Content</th>
+														<th>Priority</th>
+														<th>TTL</th>
+														<th></th>
+													</tr>
+												</thead>
+												<tfoot>
+													<tr>
+														<th class="align-middle">
+															<strong>Add:</strong>
+														</th>
+														<th class="align-middle">
+															<input type="text" name="name" id="addName" class="form-control form-control-alternative">
+														</th>
+															<th class="align-middle">
+																<select id="addRecordType" class="form-control select2" name="type" data-placeholder="Choose a Type type">
+																	<option></option>
+																	<option>A</option>
+																	<option>AAAA</option>
+																	<option>AFSDB</option>
+																	<option>CERT</option>
+																	<option>CNAME</option>
+																	<option>DHCID</option>
+																	<option>DLV</option>
+																	<option>DNSKEY</option>
+																	<option>DS</option>
+																	<option>EUI48</option>
+																	<option>EUI64</option>
+																	<option>HINFO</option>
+																	<option>IPSECKEY</option>
+																	<option>KEY</option>
+																	<option>KX</option>
+																	<option>LOC</option>
+																	<option>MINFO</option>
+																	<option>MR</option>
+																	<option>MX</option>
+																	<option>NAPTR</option>
+																	<option>NS</option>
+																	<option>NSEC</option>
+																	<option>NSEC3</option>
+																	<option>NSEC3PARAM</option>
+																	<option>OPT</option>
+																	<option>PTR</option>
+																	<option>RKEY</option>
+																	<option>RP</option>
+																	<option>RRSIG</option>
+																	<option>SPF</option>
+																	<option>SRV</option>
+																	<option>SSHFP</option>
+																	<option>TLSA</option>
+																	<option>TSIG</option>
+																	<option>TXT</option>
+																	<option>WKS</option>
+																</select>
+															</th>
+															<th class="align-middle">
+																<input type="text" name="addContent" id="addContent" class="form-control form-control-alternative" size="10">
+															</th>
+															<th class="align-middle">
+																<input type="text" name="addPriority" id="addPriority" class="form-control form-control-alternative">
+															</th>
+															<th class="align-middle">
+																<input type="text" name="addTTL" id="addTTL" class="form-control form-control-alternative">
+															</th>
+															<th class="align-middle">
+																<button type="button" class="btn btn-success" id="addRecordButton">
+																	<i class="fas fa-plus-circle"></i>
+																</button>
+															</th>
+														</tr>
+													</tfoot>
+													<tbody>
+														<repeat group="{{@DOMAINRECORDS}}" value="{{@dr}}" counter="{{ @ctr }}">
+															<tr id="row{{@dr.id}}">
+																<td>{{@dr.id}}</td>
+																<td>
+																	<a href="#" class="editable" data-type="text" data-name="name" data-pk="{{@dr.id}}" 
+
+																		<check if="{{ @dr.type=='TXT' }}">
+																			<true>data-type="textarea" </true>
+																		</check>
+																		<check if="{{ @dr.type=='SPF' }}">
+																			<true>data-type="textarea" </true>
+																		</check>
+data-url="/ajax/records/update" data-title="Enter hostname" data-linenumber="{{@ctr}}">{{ @idn_to_utf8(@dr.name) }}
+																	</a>
+																</td>
+																<td>
+																	<a href="#" class="editable" id="recordtype{{@ctr}}" data-type="select2" data-value="{{@dr.type}}" data-pk="{{@dr.id}}" data-url="/ajax/records/update" data-linenumber="{{@ctr}}">{{@dr.type}}</a>
+																</td>
+																<td class="wrap-all-words">
+																	<a href="#" class="editable" data-type="text" data-name="content" data-pk="{{@dr.id}}" data-url="/ajax/records/update" data-title="Enter IP or Hostname" data-linenumber="{{@ctr}}">{{ @idn_to_utf8(@dr.content) }}</a>
+																</td>
+																<td>
+																	<a href="#" class="editable" data-type="text" data-name="priority" data-pk="{{@dr.id}}" data-url="/ajax/records/update" data-title="Enter Priority" data-linenumber="{{@ctr}}">{{@dr.prio}}</a>
+																</td>
+																<td>
+																	<a href="#" class="editable" data-type="text" data-name="ttl" data-pk="{{@dr.id}}" data-url="/ajax/records/update" data-title="Enter hostname" data-linenumber="{{@ctr}}">{{@dr.ttl}}</a>
+																</td>
+																<td>
+																	<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmRecordDelete" data-recordid="{{@dr.id}}" data-recordname="{{@dr.name}}" data-recordtype="{{@dr.type}}" data-recordcontent="{{@dr.content}}" data-thedomain="{{@DOMAINNAME}}" data-domainid="{{@DOMAINID}}">
+																		<span class="fa fa-trash"></span>
+																	</button>
+																</td>
+															</tr>
+														</repeat>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="card mb-4">
+					<!-- Card header -->
+					<div class="card-header">
+						<h3 class="mb-0">Transfer Ownership</span>
+					</div>
+						<!-- Card body -->
+						<div class="card-body">
+							<div class="row">
+								<div class="col-sm-6 col-md-6 col-lg-3">
+									<div class="form-group">
+										<label for="newOwner" class="form-control-label">New Owner</label>
+											<input type="hidden" name="currentOwner" value="{{@USERID}}" id="currentOwner">
+										    <input type="hidden" name="cDomainID" value="{{@DOMAINID}}" id="cDomainID">
+											<select name="newOwner" class="form-control form-control-alternative select2" id="newOwner">
+												<repeat group="{{ @ALLEMAILS }}" value="{{ @ae }}">
+													<option value="{{@ae.userID}}"
+														<check if="{{@ae.userID == @USERID}}">
+															<true> selected</true>
+														</check>>{{@ae.userEmail}}
+													</option>
+												</repeat>
+											</select>
+									</div>
+								</div>
+							</div>
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="form-group">
+											<button type="button" class="btn btn-primary float-right" id="changeOwnerButton">Save</button>
+										</div>
+									</div>
+								</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="modal fade" id="confirmRecordDelete" tabindex="-1" role="dialog" aria-labelledby="confirmRecordDelete" aria-hidden="true">
+							<div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+								<div class="modal-content bg-gradient-danger">
+									<div class="modal-header">
+										<h6 class="modal-title" id="modal-title-notification">Your attention is required</h6>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">×</span>
+										</button>
+									</div>
+									<div class="modal-body">
+										<div class="py-3 text-center">
+											<i class="fas fa-exclamation-circle fa-5x"></i>
+											<h4 class="heading mt-4">
+												<span id="modalDomainName"></span>
+											</h4>
+											<p>
+												<span id="modalDeleteContent"></span>
+											</p>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-white" id="confirmDelBtn">Yes</button>
+										<button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal">No</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Footer -->
+					<include href="{{@PAGEFOOTER}}" />
+				</div>
+			</div>
