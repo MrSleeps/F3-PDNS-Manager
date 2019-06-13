@@ -1,99 +1,90 @@
-  <div class="main-content">
-    <!-- Top navbar -->
-<include href="{{@PAGETOPNAV}}" />
-    <!-- Header -->
-    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
-      <div class="container-fluid">
-        <div class="header-body">
-          <!-- Card stats -->
-
-        </div>
-      </div>
-    </div>
-    <!-- Page content -->
-    <div class="container-fluid mt--7">
-      <div class="row">
-		  <div class="col-lg-12">
-<div class="card mb-4">
-        <!-- Card header -->
-        <div class="card-header">
-          <h3 class="mb-0">Add User to the System</h3>
-        </div>
-        <!-- Card body -->
-        <div class="card-body">
-				<form method="post" class="needs-validation" novalidate="" id="addMasterDomainForm">
-		  		<div class="row">
-            <div class="col-sm-12 col-md-6 col-lg-4">
-              <div class="form-group">
-                <label class="form-control-label" for="addDomainName">Domain Name</label>
-                <input type="text" class="form-control" id="addDomainName" name="addDomainName" autocomplete="off" placeholder="some.domain" pattern="(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]" required>
-				<div class="invalid-feedback">Please enter a valid domain name.</div>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-6 col-lg-4">
-              <div class="form-group">
-                <label class="form-control-label" for="addDomainNS">Primary Name Server</label>
-                <input type="text" class="form-control" id="addDomainNS" name="addDomainNS" autocomplete="off" placeholder="primary.name.server" pattern="(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]" required>
-				<div class="invalid-feedback">Please enter a valid primary name server.</div>  
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-6 col-lg-4">
-              <div class="form-group">
-                <label class="form-control-label" for="addDomainEmail">Email</label>
-                <input type="email" class="form-control" id="addDomainEmail" name="addDomainEmail" autocomplete="off" placeholder="your@email" pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?" required>
-				  <div class="invalid-feedback">Please enter a valid Email address.</div>
-              </div>
-            </div>
-            <div class="col-sm-6 col-lg-2">
-              <div class="form-group">
-                <label class="form-control-label" for="addDomainRefresh">Refresh</label>
-                <input type="text" class="form-control" id="addDomainRefresh" name="addDomainRefresh" value="{{@DEFAULTSOAREFRESH}}" data-regex="^[0-9]+$" required>
+<div class="main-content">
+	<!-- Top navbar -->
+	<include href="{{@PAGETOPNAV}}" />
+	<!-- Header -->
+	<div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+		<div class="container-fluid">
+			<div class="header-body">
+				<!-- Card stats -->
+			</div>
+		</div>
+	</div>
+	<!-- Page content -->
+	<div class="container-fluid mt--7">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="card mb-4">
+					<!-- Card header -->
+					<div class="card-header">
+						<h3 class="mb-0">Add a User to the System</h3>
+					</div>
+					<!-- Card body -->
+					<div class="card-body">
+						<form method="post" class="needs-validation" novalidate="" id="addUserForm" autocomplete="off">
+							<div class="row">
+								<div class="col-sm-12 col-md-6 col-lg-4">
+									<div class="form-group">
+										<label class="form-control-label" for="addUserEmail">Email</label>
+										<input type="email" class="form-control" id="addUserEmail" name="addUserEmail" autocomplete="off" placeholder="their@email" pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?" required>
+											<div class="invalid-feedback">Please enter a valid Email address.</div>
+										</div>
+									</div>
+									<div class="col-sm-12 col-md-6 col-lg-3">
+										<div class="form-group">
+											<label class="form-control-label" for="addUserFullName">Their Name</label>
+											<input type="text" class="form-control" id="addUserFullName" name="addUserFullName" autocomplete="off" placeholder="Their full name" required>
+												<div class="invalid-feedback">Please enter their name.</div>
+											</div>
+									</div>
+									<div class="col-sm-12 col-md-6 col-lg-2">
+										<div class="form-group">
+											<label class="form-control-label" for="addUserLevel">User Level</label>
+												<select name="adminid" id="addUserLevel" class="form-control" name="addUserLevel" required>
+												<repeat group="{{@AVAILABLELEVELS}}" value="{{@al}}">
+													<option value="{{@al.userLevelID}}">{{@al.userLevelDesc}}</option>
+												</repeat>
+											</select>
+										</div>
+									</div>
+									<div class="col-sm-6 col-lg-3">
+										<div class="form-group">
+											<label class="form-control-label" for="addUserMaxDoms">Maximum Domains <small>0 for unlimited</small></label>
+											<input type="number" class="form-control" id="addUserMaxDoms" name="addUserMaxDoms" data-regex="^[0-9]+$" required>
+										</div>
+									</div>
+								</div>
+								<div class="row align-items-center">
+									<div class="col-sm-12 col-md-6 col-lg-3">
+										<div class="form-group">
+											<label class="form-control-label" for="addUserPassword">Password</label>
+											<input type="password" class="form-control" id="addUserPassword" name="addUserPassword" autocomplete="new-password" required>
+												<div class="invalid-feedback">Please enter a password.</div>
+											<div class="progress-bar" id="pwProgress"></div>
+										</div>
+									</div>
+								<button type="button" class="btn btn-default" id="generatePasswordButton">Generate Password</button>
+									<div class="col-sm-12 col-md-6 col-lg-2">
+										<div class="form-group">
+											<label class="form-control-label" for="addUserMaster">Master Account</label>
+												<select name="adminid" id="addUserMaster" class="form-control" name="addUserLevel" required>
+												<repeat group="{{@ALLEMAILS}}" value="{{@ae}}">
+													<option value="{{@ae.userID}}"<check if="{{@ae.userID == @CURRENTUSERID}}"><true> selected</true></check>>{{@ae.userEmail}}</option>
+												</repeat>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="form-group">
+											<button class="btn btn-success float-right" id="addUserButton" disabled>Add User</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Footer -->
+					<include href="{{@PAGEFOOTER}}" />
 				</div>
-            </div>
-            <div class="col-sm-6 col-lg-2">
-              <div class="form-group">
-                <label class="form-control-label" for="addDomainRetry">Retry</label>
-                <input type="text" class="form-control" id="addDomainRetry" name="addDomainRetry" value="{{@DEFAULTSOARETRY}}" data-regex="^[0-9]+$" required>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-6 col-lg-2">
-              <div class="form-group">
-                <label class="form-control-label" for="addDomainExpire">Expire</label>
-                <input type="text" class="form-control" id="addDomainExpire" name="addDomainExpire" value="{{@DEFAULTSOAEXPIRE}}" data-regex="^[0-9]+$" required>
-              </div>
-            </div>
-            <div class="col-sm-6 col-lg-2">
-              <div class="form-group">
-                <label class="form-control-label" for="addDomainTTL">TTL</label>
-                <input type="text" class="form-control" id="addDomainTTL" name="addDomainTTL" value="{{@DEFAULTSOATTL}}" data-regex="^[0-9]+$" required>
-              </div>
-            </div>
-            <div class="col-sm-6 col-md-6 col-lg-4">
-              <div class="form-group"> 
-			 <label for="addDomainAdminAccount" class="control-label" name="addDomainAdminAccount">Admin Account</label>
-				<select name="adminid" id="addDomainAdminAccount" class="form-control" name="addDomainAdminAccount" required>
-				<repeat group="{{@ALLEMAILS}}" value="{{@ae}}">
-				<option value="{{@ae.userID}}">{{@ae.userEmail}}</option>
-				</repeat>
-				</select>
-              </div>
-            </div>			  
-          </div>
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="form-group">
-				<button class="btn btn-success float-right" id="addMasterDomainButton">Add Master Domain</button>
-              </div>
-            </div>
-          </div>
-				</form>
-        </div>
-      </div>			  
-		  </div>
-		  
-      </div>
-
-      <!-- Footer -->
-<include href="{{@PAGEFOOTER}}" />
-    </div>
-  </div>
+			</div>

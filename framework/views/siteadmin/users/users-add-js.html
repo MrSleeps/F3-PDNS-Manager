@@ -1,0 +1,72 @@
+<script type="text/javascript" src="/assets/node_modules/pnotify/dist/iife/PNotify.js"></script>
+<script type="text/javascript" src="/assets/node_modules/pnotify/dist/iife/PNotifyButtons.js"></script>
+<script type="text/javascript" src="/assets/node_modules/zxcvbn/dist/zxcvbn.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap-zxcvbn.jquery.js"></script>
+<script>
+$(document).ready(function() {
+    var stack_center = {
+        "dir1": "down",
+        "dir2": "right",
+        "firstpos1": 25,
+        "firstpos2": ($(window).width() / 2 - 150)
+    };
+    PNotify.defaults.styling = 'bootstrap4';	
+    $("#generatePasswordButton").click(function() {
+        $.ajax({
+            type: 'GET',
+            url: "/ajax/password",
+            dataType: 'json',
+            success: function(data) {
+                document.getElementById("addUserPassword").type = 'text';
+                $("#addUserPassword").val(data.password);
+				$("#addUserPassword").trigger("change");
+            }
+        });
+        return false;
+    });
+});
+$('#pwProgress').zxcvbnProgress({
+    passwordInput: '#addUserPassword',
+    ratings: ["Bad", "Better", "OK", "Getting there", "Strong"],
+    progressClasses: ['bg-danger', 'bg-warning', 'bg-info', 'bg-default', 'bg-success']
+});
+	
+$('#addUserButton').on('click', function() {
+    var stack_center = {
+        "dir1": "down",
+        "dir2": "right",
+        "firstpos1": 25,
+        "firstpos2": ($(window).width() / 2 - 150)
+    };
+    PNotify.defaults.styling = 'bootstrap4';	
+	var data = {
+		userEmail: $('#addUserEmail').val(),
+		addUserFullName: $('#addUserFullName').val(),
+		addUserLevel: $('#addUserLevel').val(),
+		addUserMaxDoms: $('#addUserMaxDoms').val(),
+		addUserPassword: $('#addUserPassword').val(),
+		addUserMaster: $('#addUserMaster').val(),
+		csrfToken: $('#csrfToken').text()
+	};	
+	$.ajax({
+		url: '/ajax/users/add',
+		method: 'POST',
+		data: JSON.stringify(data),
+		dataType: 'json',
+		success: function(response) {
+			location.assign("/users/edit/" + response.userid);
+		},
+		error: function(response) {
+			PNotify.error({
+				title: 'Error!',
+				text: response.responseText,
+				type: 'error',
+				icon: false,
+				addclass: "stack_center",
+				stack: stack_center
+			});
+		}		
+	});
+	return false;
+});
+</script>

@@ -626,6 +626,7 @@ class DashboardController extends Controller
         $records  = new Records($this->db);
         $users    = new Users($this->db);
         $validate = new Validate($this->db);
+		$levels   = new UserLevel($this->db);
         $validate->isLoggedIn($f3, $this->db);
         $adminlevel    = $this->f3->get('SESSION.adminlevel');
         $userleveldesc = $this->f3->get('SESSION.adminleveldesc');
@@ -653,7 +654,11 @@ class DashboardController extends Controller
         $this->f3->set('USERSEMAIL', $this->f3->get('SESSION.email'));
         if ($adminlevel == "2") {
             // Site Admin
-            $this->f3->set('ALLEMAILS', $useremails);
+			$availableLevels = $levels->all();
+			$useremails = $users->listAllEmails();
+			$this->f3->set('ALLEMAILS', $useremails);			
+			$this->f3->set('AVAILABLELEVELS',$availableLevels);
+			$this->f3->set('CURRENTUSERID',$this->f3->get('SESSION.userid'));
             $this->f3->set('PAGECONTENT', $urlslug . 'users/users-add.html');
             $this->f3->set('PAGESIDEMENU', $urlslug . 'sidemenu.html');
             $this->f3->set('PAGEJAVASCRIPT', $urlslug . 'users/users-add-js.html');
