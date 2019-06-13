@@ -124,13 +124,13 @@ class Records extends DB\SQL\Mapper
         }
     }
     
-    public function updateSOA($domainId, $soaprimary, $soaemail, $soaserial, $soarefresh, $soaretry, $soaexpire, $soattl)
+    public function updateSOA($domainID, $soaprimary, $soaemail, $soaserial, $soarefresh, $soaretry, $soaexpire, $soattl)
     {
         $soa = new SOA($this->db);
         $this->load(array(
             'type=? AND domain_id=?',
             'SOA',
-            $domainId
+            $domainID
         ));
         $content = explode(" ", $this->content);
         $serial  = $content[2];
@@ -145,7 +145,7 @@ class Records extends DB\SQL\Mapper
         $this->save();
         return $this->id;
     }
-    
+	
     public function updateSerial($domainId)
     {
         $this->load(array(

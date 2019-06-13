@@ -18,10 +18,10 @@ Pretty much everything, currently only part of the DNS Admin stuff works, it is 
 - [x] ~~Add Domains~~
 - [x] ~~Edit Domains~~
 - [x] ~~Delete Domains~~
-- [ ] Add Users
+- [x] ~~Add Users~~
 - [x] ~~Edit Users~~
 - [x] ~~Delete Users~~
-- [ ] Assign Domain to different user
+- [x] ~~Assign Domain to different user~~
 
 #### Domain Admin
 - [ ] Add Domains
@@ -40,6 +40,7 @@ Pretty much everything, currently only part of the DNS Admin stuff works, it is 
 - [ ] Domain and Record Limits (Per User and/or Per Domain)
 - [ ] Tidy Up Plugins Folder
 - [ ] Password checking against Have I Been Pwned
+- [ ] Fix Logging
 
 ## Prerequisities
 

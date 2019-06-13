@@ -347,6 +347,54 @@ class AjaxController extends Controller
             $this->returnError('Your account cannot do that');
         }
     }
+	
+    public function ajaxachangeOwner($f3)
+    {
+        $template   = new Template;
+        $domains    = new Domains($this->db);
+		$domainData = new DomainData($this->db);
+        $users      = new Users($this->db);
+        $soa        = new SOA($this->db);
+        $validate   = new Validate($this->db);
+        $domainData = new DomainData($this->db);
+        $logs       = new BigBrother($this->db);
+		$records    = new Records($this->db);
+        $adminLevel = $this->f3->get('SESSION.adminlevel');
+		$postedData = json_decode($f3->get('BODY'), true);
+		$domainID   = $postedData["cDomainID"];
+		$currentOwner = $postedData["currentOwner"];
+		$newOwner   = $postedData["newOwner"];
+        if ($adminLevel == '2') {
+            if (empty($domainID)) {
+                $error = "A problem occured, please refresh the page.";
+            }
+            
+            if (!$error) {
+				$masterID = $users->getMasterAccount($currentOwner);
+                $changeOwner = $domainData->changeOwner($domainID,$currentOwner,$newOwner,$masterID);
+				$newEmail = $users->returnUserEmail($newOwner);
+            	list($soaprimary, $soaemail, $soaserial, $soarefresh, $soaretry, $soaexpire, $soattl) = $soa->getSOADetails($domainID);
+				$updateSOAEmail = $records->updateSOA($domainID, $soaprimary, $newEmail, $soaserial, $soarefresh, $soaretry, $soaexpire, $soattl);
+            if ($updateSOAEmail > 0) {
+                $updatedserial = $records->updateSerial($domainID);
+                if ($updatedserial > 0) {
+                    //$logs->addLogEntry($domainID, $domainName, $this->f3->get('SESSION.userid'), $this->f3->get('SESSION.email'), 'UPDATE', 'SOA for ' . $domainName, $masterAccountID);
+                }				
+				//$domainInfo = $domains->getById($domainID);
+				//$domainName = $domainInfo[0]["name"];
+                //$logs->addLogEntry($domainID, $domainName, $this->f3->get('SESSION.userid'), $this->f3->get('SESSION.email'), 'CHANGE OWNERSHIP', $domainName, $this->f3->get('SESSION.masteraccountid'));
+                        header('Content-type: application/json');
+                        echo json_encode(array(
+                            'Message' => "Domain Owner Changed", "newOwnerEmail" => $newEmail
+                        ));
+            } else {
+                $this->returnError($error);
+                return;
+            }
+        }
+
+      }
+	}
     
     public function ajaxSOAUpdate($f3)
     {
@@ -981,6 +1029,10 @@ class AjaxController extends Controller
             }
             
             $updateduser = $users->updateUser($userid, $useremail, $userrole, $username, $maxdomains, $useractive, $usermasteraccount);
+			$this->f3->set('SESSION.masteraccountid', $usermasteraccount);
+			$this->f3->set('SESSION.adminlevel', userrole);
+			$this->f3->set('SESSION.adminleveldesc', $userlevel->getLevelDesc(userrole));
+			$this->f3->set('SESSION.maxdomains', $maxdomains);
             if ($updateduser !== false) {
                 http_response_code(200);
                 echo json_encode(array(
@@ -1238,13 +1290,14 @@ class AjaxController extends Controller
         $users           = new Users($this->db);
         $soa             = new SOA($this->db);
         $validate        = new Validate($this->db);
+		$postedData      = json_decode($f3->get('BODY'), true);
         $adminLevel      = $this->f3->get('SESSION.adminlevel');
-        $useremail       = $f3->get('POST.useremail');
-        $username        = $f3->get('POST.username');
-        $userrole        = $f3->get('POST.role');
-        $maxdomains      = $f3->get('POST.maxdomains');
-        $password1       = $f3->get('POST.userpassword1');
-        $password2       = $f3->get('POST.userpassword2');
+        $useremail       = $postedData["userEmail"];
+		$userFullName    = $postedData["addUserFullName"];
+        $userLevel       = $postedData["addUserLevel"];
+		$userMaxDoms     = $postedData["addUserMaxDoms"];
+		$userPassword    = $postedData["addUserPassword"];
+		$userMaster      = $postedData["addUserMaster"];
         $masteraccountid = $this->f3->get('SESSION.masteraccountid');
         $userenabled     = '1';
         if ($adminLevel == '2') {
@@ -1266,52 +1319,40 @@ class AjaxController extends Controller
                 return;
             }
             
-            if (empty($username)) {
+            if (empty($userFullName)) {
                 $error = "The Users Name Cannot Be Empty";
                 $this->returnError($error);
                 return;
             }
             
-            if (empty($adminLevel)) {
-                if ($validate->isValidNumber($adminLevel) === false) {
+            if (empty($userLevel)) {
+                if ($validate->isValidNumber($userLevel) === false) {
                     $error = "Max Accounts value is incorrect";
                     $this->returnError($error);
                     return;
                 }
             }
             
-            if (empty($maxdomains) && !strlen($maxdomains)) {
+            if (empty($userMaxDoms) && !strlen($userMaxDoms)) {
                 $error = "Max Domains Must Not Be Empty";
                 $this->returnError($error);
                 return;
             } else {
-                if ($validate->isValidNumber($maxdomains) === false) {
+                if ($validate->isValidNumber($userMaxDoms) === false) {
                     $error = "Max Domains Must Be A Number";
                     $this->returnError($error);
                     return;
                 }
             }
             
-            if (empty($password1)) {
-                $error = "First Password Field Cannot Be Empty";
+            if (empty($userPassword)) {
+                $error = "Password Field Cannot Be Empty";
                 $this->returnError($error);
                 return;
             }
             
-            if (empty($password2)) {
-                $error = "Second Password Field Cannot Be Empty";
-                $this->returnError($error);
-                return;
-            }
-            
-            if ($password1 !== $password2) {
-                $error = "Passwords Do not Match";
-                $this->returnError($error);
-                return;
-            }
-            
-            if (strlen($password1) < 9) {
-                $error = "Passwords Must Be At Least 9 Characters";
+            if (strlen($userPassword) < 5) {
+                $error = "Password Must Be At Least 5 Characters";
                 $this->returnError($error);
                 return;
             }
@@ -1319,14 +1360,8 @@ class AjaxController extends Controller
             if ($adminLevel == 2) {
                 $masteraccountid = $f3->get('SITEMASTERUSERID');
             }
-            
-            $useremail  = $f3->get('POST.useremail');
-            $username   = $f3->get('POST.username');
-            $userrole   = $f3->get('POST.role');
-            $maxdomains = $f3->get('POST.maxdomains');
-            $password1  = $f3->get('POST.userpassword1');
-            $password2  = $f3->get('POST.userpassword2');
-            $adduser    = $users->add($useremail, $username, $userrole, $maxdomains, $password1, $masteraccountid);
+
+            $adduser    = $users->add($useremail, $userFullName, $userLevel, $userMaxDoms, $userPassword, $userMaster);
             if ($adduser >= 0) {
                 http_response_code(200);
                 echo json_encode(array(
@@ -1431,7 +1466,7 @@ class AjaxController extends Controller
                 return;
             }
         } else {
-            $this->returnError('Your account cannot do that');
+            //$this->returnError('Your account cannot do that');
         }
     }
     

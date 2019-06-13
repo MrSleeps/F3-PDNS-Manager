@@ -127,5 +127,16 @@ class DomainData extends DB\SQL\Mapper
             return true;
         }
     }
+
+	public function changeOwner($domainID,$currentOwner,$newOwner,$masterID)
+	{
+        $this->load(array(
+            'domainID=?',
+            $domainID
+        ));
+		$this->domainAdmin = $newOwner;
+		$this->save();
+		return true;
+	}	
     
 }

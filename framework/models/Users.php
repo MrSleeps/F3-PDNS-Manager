@@ -262,4 +262,13 @@ Group By
             return 1;
         }
     }
+	
+	public function returnUserEmail($userID)
+	{
+        $this->load(array(
+            'userID=?',
+            $userID
+        ));
+		return $this->userEmail;
+	}
 }

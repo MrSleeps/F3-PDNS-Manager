@@ -1,40 +1,43 @@
 <script type="text/javascript" src="/assets/node_modules/pnotify/dist/iife/PNotify.js"></script>
 <script type="text/javascript" src="/assets/node_modules/pnotify/dist/iife/PNotifyButtons.js"></script>
 <script src="/assets/bower_components/select2/dist/js/select2.old.min.js"></script>
-    <script src="/assets/node_modules/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="/assets/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="/assets/node_modules/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="/assets/node_modules/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
-    <script src="/assets/node_modules/datatables.net-buttons/js/buttons.html5.min.js"></script>
-    <script src="/assets/node_modules/datatables.net-buttons/js/buttons.flash.min.js"></script>
-    <script src="/assets/node_modules/datatables.net-buttons/js/buttons.print.min.js"></script>
-    <script src="/assets/node_modules/datatables.net-select/js/dataTables.select.min.js"></script>
-    <script src="/assets/js/bootstrap-editable.min.js"></script>
-    <script>
-      $( document ).ready(function() {
-              var e, a = $("#datatable-records");
-              a.length && (e = {
-                  lengthChange: !1,
-      			"pageLength": 50,
-                  dom: "Bfrtip",
-                  buttons: ["copy", "print"],
-                  language: {
-                      paginate: {
-                          previous: "<i class='fas fa-angle-left'>",
-                          next: "<i class='fas fa-angle-right'>"
-                      }
-                  }
-              }, a.on("init.dt", function() {
-                  $(".dt-buttons .btn").removeClass("btn-secondary").addClass("btn-sm btn-default")
-              }).DataTable(e))
-      });        
-    </script>
-
+<script src="/assets/node_modules/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/assets/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/assets/node_modules/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/assets/node_modules/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
+<script src="/assets/node_modules/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/assets/node_modules/datatables.net-buttons/js/buttons.flash.min.js"></script>
+<script src="/assets/node_modules/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/assets/node_modules/datatables.net-select/js/dataTables.select.min.js"></script>
+<script src="/assets/js/bootstrap-editable.min.js"></script>
 <script>
-// PNotify.defaults.styling = 'bootstrap4';
 $(document).ready(function() {
-	var stack_center = {"dir1": "down", "dir2": "right", "firstpos1": 25, "firstpos2": ($(window).width()/2 - 150)};
-	PNotify.defaults.styling = 'bootstrap4';
+    var e, a = $("#datatable-records");
+    a.length && (e = {
+        lengthChange: !1,
+        "pageLength": 50,
+        dom: "Bfrtip",
+        buttons: ["copy", "print"],
+        language: {
+            paginate: {
+                previous: "<i class='fas fa-angle-left'>",
+                next: "<i class='fas fa-angle-right'>"
+            }
+        }
+    }, a.on("init.dt", function() {
+        $(".dt-buttons .btn").removeClass("btn-secondary").addClass("btn-sm btn-default")
+    }).DataTable(e))
+});
+</script>
+<script>
+$(document).ready(function() {
+    var stack_center = {
+        "dir1": "down",
+        "dir2": "right",
+        "firstpos1": 25,
+        "firstpos2": ($(window).width() / 2 - 150)
+    };
+    PNotify.defaults.styling = 'bootstrap4';
     $('.editable').editable({
         params: function(params) {
             var lineid = $(this).data("linenumber");
@@ -45,10 +48,24 @@ $(document).ready(function() {
             data.recordtype = $("#recordtype" + lineid).data('value');
             return data;
         },
-		    success: function(response, newValue) {
-				if(response.status == 'error') PNotify.error({title: 'Error!', text: response.msg, type: 'error', icon: false , addclass: "stack_center", stack: stack_center });
-				if(response.status == 'ok') PNotify.success({title: 'Done!', text: response.msg, type: 'success', icon: false, addclass: "stack_center", stack: stack_center });
-    }
+        success: function(response, newValue) {
+            if (response.status == 'error') PNotify.error({
+                title: 'Error!',
+                text: response.msg,
+                type: 'error',
+                icon: false,
+                addclass: "stack_center",
+                stack: stack_center
+            });
+            if (response.status == 'ok') PNotify.success({
+                title: 'Done!',
+                text: response.msg,
+                type: 'success',
+                icon: false,
+                addclass: "stack_center",
+                stack: stack_center
+            });
+        }
     });
     $('.editable-type').editable({
         source: [{
@@ -174,7 +191,7 @@ $(document).ready(function() {
         updateSOA();
     });
 
-    var availableRecordTypes = [ 
+    var availableRecordTypes = [
         "A", "AAAA", "AFSDB", "CERT", "CNAME", "DHCID",
         "DLV", "DNSKEY", "DS", "EUI48", "EUI64", "HINFO",
         "IPSECKEY", "KEY", "KX", "LOC", "MINFO", "MR",
@@ -183,17 +200,24 @@ $(document).ready(function() {
         "SRV", "SSHFP", "TLSA", "TSIG", "TXT", "WKS"
     ];
 
-	var placeholder = $(this).data('placeholder') || 'Choose a Type';
+    var placeholder = $(this).data('placeholder') || 'Choose a Type';
     $('#addRecordType').select2({
 
-		width: 'style',
+        width: 'style',
         placeholder: placeholder
     });
 	
-	    Select2 = function() {
+    $('#newOwner').select2({
+
+        width: 'style'
+    });	
+
+    Select2 = function() {
         var e = $('[data-toggle="select"]');
         e.length && e.each(function() {
-            $(this).select2({placeholder: placeholder})
+            $(this).select2({
+                placeholder: placeholder
+            })
         })
     }()
 
@@ -236,14 +260,21 @@ $(document).ready(function() {
                 .append('<td>' + data.prio + '</td>')
                 .append('<td>' + data.ttl + '</td>');
             document.getElementById("soaserial").value = jsonreply.newserial;
-			PNotify.success({
+            PNotify.success({
                 title: 'Record Added!',
                 text: 'Your record has been added',
                 type: 'success',
                 icon: false
-			});			
+            });
         }).fail(function(errorMsg) {
-			PNotify.error({title: 'Error!', text: errorMsg.responseText, type: 'error', icon: false , addclass: "stack_center", stack: stack_center });
+            PNotify.error({
+                title: 'Error!',
+                text: errorMsg.responseText,
+                type: 'error',
+                icon: false,
+                addclass: "stack_center",
+                stack: stack_center
+            });
 
         });
     }
@@ -278,21 +309,59 @@ $(document).ready(function() {
         }).done(function(dataRecv) {
             //var jsonreply = $.parseJSON(dataRecv);
             document.getElementById("soaserial").value = dataRecv.newserial;
-			PNotify.success({
+            PNotify.success({
                 title: 'SOA Updated',
                 text: 'Domain SOA record has been updated',
                 type: 'success',
                 icon: false
-			});	
+            });
         }).fail(function(errorMsg) {
-			PNotify.error({
-                    title: 'Error!',
-                    text: errorMsg.responseText,
-                    type: 'error',
-                    icon: false
-			});				
+            PNotify.error({
+                title: 'Error!',
+                text: errorMsg.responseText,
+                type: 'error',
+                icon: false
+            });
         });
     }
+	
+    $("#changeOwnerButton").click(function() {
+        var data = {
+            newOwner: $('#newOwner').val(),
+			currentOwner: $('#currentOwner').val(),
+			cDomainID: $('#cDomainID').val(),
+			newEmail: $("#newOwner option:selected").text(),
+            csrfToken: $('#csrfToken').text()
+        };
+        $.ajax({
+            type: 'POST',
+            url: "/ajax/domains/changeowner",
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function(data) {
+                PNotify.success({
+                    title: 'Success!',
+                    text: data.Message,
+                    type: 'error',
+                    icon: false,
+                    addclass: "stack_center",
+                    stack: stack_center
+                });
+				$('#soamail').val(data.newOwnerEmail);
+            },
+            error: function(response) {
+                PNotify.error({
+                    title: 'Error!',
+                    text: response.responseText,
+                    type: 'error',
+                    icon: false,
+                    addclass: "stack_center",
+                    stack: stack_center
+                });
+            }
+        });
+        return false;
+    });	
 
     $('#confirmRecordDelete').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget)
@@ -324,21 +393,20 @@ $(document).ready(function() {
             }).done(function(data) {
                 $('#confirmRecordDelete').modal('hide');
                 $(tablerowid).closest('tr').remove();
-			PNotify.success({
-                title: 'Record Deleted!',
-                text: 'Your record has been delted',
-                type: 'success',
-                icon: false
-			});					
+                PNotify.success({
+                    title: 'Record Deleted!',
+                    text: 'Your record has been delted',
+                    type: 'success',
+                    icon: false
+                });
             }).fail(function(errorMsg) {
-			PNotify.error({
+                PNotify.error({
                     title: 'Error!',
                     text: errorMsg.responseText,
                     type: 'error',
                     icon: false
-			});					
+                });
             });
         });
     });
-});	
-</script>
+});</script>

@@ -2,174 +2,225 @@
 <script type="text/javascript" src="/assets/node_modules/pnotify/dist/iife/PNotifyButtons.js"></script>
 <script src="/assets/bower_components/select2/dist/js/select2.min.js"></script>
 <script src="/assets/node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="/assets/node_modules/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="/assets/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="/assets/node_modules/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="/assets/node_modules/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
-    <script src="/assets/node_modules/datatables.net-buttons/js/buttons.html5.min.js"></script>
-    <script src="/assets/node_modules/datatables.net-buttons/js/buttons.flash.min.js"></script>
-    <script src="/assets/node_modules/datatables.net-buttons/js/buttons.print.min.js"></script>
-    <script src="/assets/node_modules/datatables.net-select/js/dataTables.select.min.js"></script>
+<script src="/assets/node_modules/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/assets/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/assets/node_modules/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/assets/node_modules/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
+<script src="/assets/node_modules/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/assets/node_modules/datatables.net-buttons/js/buttons.flash.min.js"></script>
+<script src="/assets/node_modules/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/assets/node_modules/datatables.net-select/js/dataTables.select.min.js"></script>
 <script>
-// PNotify.defaults.styling = 'bootstrap4';
 $(document).ready(function() {
-	var stack_center = {"dir1": "down", "dir2": "right", "firstpos1": 25, "firstpos2": ($(window).width()/2 - 150)};
-	PNotify.defaults.styling = 'bootstrap4';
-if (sessionStorage.updateSuccess == "true") {
-PNotify.success({title: 'Success!', text: "User was updated", type: 'error', icon: false , addclass: "stack_center", stack: stack_center });
-sessionStorage.removeItem("updateSuccess");
-}
-    $.validator.setDefaults({
-    highlight: function(element) {
-        $(element).closest('.form-group').find(".form-control:first").addClass('is-invalid');
-    },
-    unhighlight: function(element) {
-        $(element).closest('.form-group').find(".form-control:first").removeClass('is-invalid');
-        $(element).closest('.form-group').find(".form-control:first").addClass('is-valid');
-
-    },
-    errorElement: 'span',
-    errorClass: 'invalid-feedback',
-    errorPlacement: function(error, element) {
-        if(element.parent('.input-group').length) {
-            error.insertAfter(element.parent());
-        } else {
-            error.insertAfter(element);
-        }
+    var stack_center = {
+        "dir1": "down",
+        "dir2": "right",
+        "firstpos1": 25,
+        "firstpos2": ($(window).width() / 2 - 150)
+    };
+    PNotify.defaults.styling = 'bootstrap4';
+    if (sessionStorage.updateSuccess == "true") {
+        PNotify.success({
+            title: 'Success!',
+            text: "User was updated",
+            type: 'error',
+            icon: false,
+            addclass: "stack_center",
+            stack: stack_center
+        });
+        sessionStorage.removeItem("updateSuccess");
     }
-});	
-	
-        $("#generatePasswordButton").click(function(){
+    $.validator.setDefaults({
+        highlight: function(element) {
+            $(element).closest('.form-group').find(".form-control:first").addClass('is-invalid');
+        },
+        unhighlight: function(element) {
+            $(element).closest('.form-group').find(".form-control:first").removeClass('is-invalid');
+            $(element).closest('.form-group').find(".form-control:first").addClass('is-valid');
+
+        },
+        errorElement: 'span',
+        errorClass: 'invalid-feedback',
+        errorPlacement: function(error, element) {
+            if (element.parent('.input-group').length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+        }
+    });
+
+    $("#generatePasswordButton").click(function() {
         $.ajax({
             type: 'GET',
             url: "/ajax/password",
-			dataType: 'json',
-            success:function(data){
-				document.getElementById("passwordOne").type = 'text';
-				document.getElementById("passwordTwo").type = 'text';
-				$("#passwordOne").val(data.password);
-				$("#passwordTwo").val(data.password);
+            dataType: 'json',
+            success: function(data) {
+                document.getElementById("passwordOne").type = 'text';
+                document.getElementById("passwordTwo").type = 'text';
+                $("#passwordOne").val(data.password);
+                $("#passwordTwo").val(data.password);
             }
         });
-    return false;
+        return false;
     });
 
-			$( "#changePasswordForm" ).validate( {
-				ignore: ":hidden",
-				rules: {
-					passwordOne: {
-						required: true,
-						minlength: 5
-					},
-					passwordTwo: {
-						required: true,
-						minlength: 5,
-						equalTo: "#passwordOne"
-					}
-				},
-				messages: {
-					passwordOne: {
-						required: "Please provide a password",
-						minlength: "Your password must be at least 5 characters long"
-					},
-					passwordTwo: {
-						required: "Please provide a password",
-						minlength: "Your password must be at least 5 characters long",
-						equalTo: "Please enter the same password as above"
-					}
-				},				
-         submitHandler: function (form) {
-    var data = {
-		userID: $('#userIDPW').val(),
-		passwordOne: $('#passwordOne').val(),
-        passwordTwo: $('#passwordTwo').val(),
-        csrfToken: $('#csrfToken').text()
-    };			 
-             $.ajax({
-                 type: "POST",
-                 url: "/ajax/users/password",
-                 data: JSON.stringify(data),
-                 success: function () {
-                     PNotify.success({title: 'Success!', text: "Users password was changed", type: 'error', icon: false , addclass: "stack_center", stack: stack_center });
-				document.getElementById("passwordOne").type = 'password';
-				document.getElementById("passwordTwo").type = 'password';
-				$("#passwordOne").val("");
-				$("#passwordTwo").val("");	
-                 },
-                error: function (response) {
-                       PNotify.error({title: 'Error!', text: response.responseText, type: 'error', icon: false , addclass: "stack_center", stack: stack_center });
-                }				 
-             });
-             return false;
+    $("#changePasswordForm").validate({
+        ignore: ":hidden",
+        rules: {
+            passwordOne: {
+                required: true,
+                minlength: 5
+            },
+            passwordTwo: {
+                required: true,
+                minlength: 5,
+                equalTo: "#passwordOne"
+            }
+        },
+        messages: {
+            passwordOne: {
+                required: "Please provide a password",
+                minlength: "Your password must be at least 5 characters long"
+            },
+            passwordTwo: {
+                required: "Please provide a password",
+                minlength: "Your password must be at least 5 characters long",
+                equalTo: "Please enter the same password as above"
+            }
+        },
+        submitHandler: function(form) {
+            var data = {
+                userID: $('#userIDPW').val(),
+                passwordOne: $('#passwordOne').val(),
+                passwordTwo: $('#passwordTwo').val(),
+                csrfToken: $('#csrfToken').text()
+            };
+            $.ajax({
+                type: "POST",
+                url: "/ajax/users/password",
+                data: JSON.stringify(data),
+                success: function() {
+                    PNotify.success({
+                        title: 'Success!',
+                        text: "Users password was changed",
+                        type: 'error',
+                        icon: false,
+                        addclass: "stack_center",
+                        stack: stack_center
+                    });
+                    document.getElementById("passwordOne").type = 'password';
+                    document.getElementById("passwordTwo").type = 'password';
+                    $("#passwordOne").val("");
+                    $("#passwordTwo").val("");
+                },
+                error: function(response) {
+                    PNotify.error({
+                        title: 'Error!',
+                        text: response.responseText,
+                        type: 'error',
+                        icon: false,
+                        addclass: "stack_center",
+                        stack: stack_center
+                    });
+                }
+            });
+            return false;
 
-				
-			} 
-			});
 
-        $("#resetPasswordButton").click(function(){
-    var data = {
-		userEmail: $('#pwResetEmail').val(),
-        csrfToken: $('#csrfToken').text()
-    };				
+        }
+    });
+
+    $("#resetPasswordButton").click(function() {
+        var data = {
+            userEmail: $('#pwResetEmail').val(),
+            csrfToken: $('#csrfToken').text()
+        };
         $.ajax({
             type: 'POST',
             url: "/ajax/users/password/reset",
-			data: JSON.stringify(data),
-			dataType: 'json',
-            success:function(data){
-                     PNotify.success({title: 'Success!', text: data.Message, type: 'error', icon: false , addclass: "stack_center", stack: stack_center });
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function(data) {
+                PNotify.success({
+                    title: 'Success!',
+                    text: data.Message,
+                    type: 'error',
+                    icon: false,
+                    addclass: "stack_center",
+                    stack: stack_center
+                });
             },
-                error: function (response) {
-                       PNotify.error({title: 'Error!', text: response.responseText, type: 'error', icon: false , addclass: "stack_center", stack: stack_center });
-                }				
+            error: function(response) {
+                PNotify.error({
+                    title: 'Error!',
+                    text: response.responseText,
+                    type: 'error',
+                    icon: false,
+                    addclass: "stack_center",
+                    stack: stack_center
+                });
+            }
         });
-    return false;
-    });	
+        return false;
+    });
 
-function saveUserData(callback) {
-	var stack_center = {"dir1": "down", "dir2": "right", "firstpos1": 25, "firstpos2": ($(window).width()/2 - 150)};
-	PNotify.defaults.styling = 'bootstrap4';		
-    var data = {
-		userID: $('#userID').val(),
-        userEmail: $('#userEmailAddress').val(),
-        userFullName: $('#userFullName').val(),
-        userLevel: $('#usersLevel').val(),
-        masterAccount: $('#masterAccount').val(),
-        userMaxDomains: $('#userMaxDomains').val(),
-        userEnabled: $('#userEnabled:checked').val(),
-        userDisabled: $('#userDisabled:checked').val(),
-        csrfToken: $('#csrfToken').text()
-    };
-    
-    $.post(
-        "/ajax/users/update",
-        JSON.stringify(data),
-        function(data) {
-            callback(data.newID);
-        },
-        "json"
-    ).fail(function(response) {
-		PNotify.error({title: 'Error!', text: response.responseText, type: 'error', icon: false , addclass: "stack_center", stack: stack_center });
-});
-}	
+    function saveUserData(callback) {
+        var stack_center = {
+            "dir1": "down",
+            "dir2": "right",
+            "firstpos1": 25,
+            "firstpos2": ($(window).width() / 2 - 150)
+        };
+        PNotify.defaults.styling = 'bootstrap4';
+        var data = {
+            userID: $('#userID').val(),
+            userEmail: $('#userEmailAddress').val(),
+            userFullName: $('#userFullName').val(),
+            userLevel: $('#usersLevel').val(),
+            masterAccount: $('#masterAccount').val(),
+            userMaxDomains: $('#userMaxDomains').val(),
+            userEnabled: $('#userEnabled:checked').val(),
+            userDisabled: $('#userDisabled:checked').val(),
+            csrfToken: $('#csrfToken').text()
+        };
 
-    $('#updateUserButton').click(function(evt){
-		var form = document.getElementById('updateUserForm');
-		
+        $.post(
+            "/ajax/users/update",
+            JSON.stringify(data),
+            function(data) {
+                callback(data.newID);
+            },
+            "json"
+        ).fail(function(response) {
+            PNotify.error({
+                title: 'Error!',
+                text: response.responseText,
+                type: 'error',
+                icon: false,
+                addclass: "stack_center",
+                stack: stack_center
+            });
+        });
+    }
+
+    $('#updateUserButton').click(function(evt) {
+        var form = document.getElementById('updateUserForm');
+
         if (form.checkValidity() === false) {
-          evt.preventDefault();
-          evt.stopPropagation();
+            evt.preventDefault();
+            evt.stopPropagation();
         } else {
-			evt.preventDefault();
-				saveUserData(function(id) {
-				//$("#updateUserForm").load(location.href + " #updateUserForm");
-					sessionStorage.updateSuccess = "true";
-				location.reload();
-				})				
-		}
-			
-        form.classList.add('was-validated');	
-    });		
+            evt.preventDefault();
+            saveUserData(function(id) {
+                //$("#updateUserForm").load(location.href + " #updateUserForm");
+                sessionStorage.updateSuccess = "true";
+                location.reload();
+            })
+        }
+
+        form.classList.add('was-validated');
+    });
 
     $('#confirmRecordDelete').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget)
@@ -201,70 +252,89 @@ function saveUserData(callback) {
             }).done(function(data) {
                 $('#confirmRecordDelete').modal('hide');
                 $(tablerowid).closest('tr').remove();
-			PNotify.success({
-                title: 'Record Deleted!',
-                text: 'Your record has been delted',
-                type: 'success',
-                icon: false
-			});					
+                PNotify.success({
+                    title: 'Record Deleted!',
+                    text: 'Your record has been delted',
+                    type: 'success',
+                    icon: false
+                });
             }).fail(function(errorMsg) {
-			PNotify.error({
+                PNotify.error({
                     title: 'Error!',
                     text: errorMsg.responseText,
                     type: 'error',
                     icon: false
-			});					
+                });
             });
         });
     });
-});	
+}); 
 </script>
 <script>
 $(document).ready(function() {
-              var e, a = $("#datatable-records");
-              a.length && (e = {
-                  lengthChange: !1,
-      			"pageLength": 50,
-                  dom: "Bfrtip",
-                  buttons: ["copy", "print"],
-                  language: {
-                      paginate: {
-                          previous: "<i class='fas fa-angle-left'>",
-                          next: "<i class='fas fa-angle-right'>"
-                      }
-                  }
-              }, a.on("init.dt", function() {
-                  $(".dt-buttons .btn").removeClass("btn-secondary").addClass("btn-sm btn-default")
-              }).DataTable(e))
-	var stack_center = {"dir1": "down", "dir2": "right", "firstpos1": 25, "firstpos2": ($(window).width()/2 - 150)};
-    $('#confirmDomainDelete').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget)
-        var domainid = button.data('domainid') // Extract info from data-* attributes
-        var domainname = button.data('domainname')
-        var tablerowid = '#row' + domainid
-        var content = 'Are you sure want to delete <b>' + domainname + '</b>?'
-        var modal = $(this)
+	var e, a = $("#datatable-records");
+	a.length && (e = {
+		lengthChange: !1,
+		"pageLength": 50,
+		dom: "Bfrtip",
+		buttons: ["copy", "print"],
+		language: {
+			paginate: {
+				previous: "<i class='fas fa-angle-left'>",
+				next: "<i class='fas fa-angle-right'>"
+			}
+		}
+	}, a.on("init.dt", function() {
+		$(".dt-buttons .btn").removeClass("btn-secondary").addClass("btn-sm btn-default")
+	}).DataTable(e))
+	var stack_center = {
+		"dir1": "down",
+		"dir2": "right",
+		"firstpos1": 25,
+		"firstpos2": ($(window).width() / 2 - 150)
+	};
+	$('#confirmDomainDelete').on('show.bs.modal', function(event) {
+		var button = $(event.relatedTarget)
+		var domainid = button.data('domainid') // Extract info from data-* attributes
+		var domainname = button.data('domainname')
+		var tablerowid = '#row' + domainid
+		var content = 'Are you sure want to delete <b>' + domainname + '</b>?'
+		var modal = $(this)
 		modal.find('#modalDomainName').html(domainname)
-        modal.find('#modalDeleteContent').html(content)
-        $("#confirmDelBtn").unbind("click").click(function(e) {
-            var data = {
-                domainid: domainid,
-                domainname: domainname,
-                csrfToken: $('#csrfToken').text()
-            };
+		modal.find('#modalDeleteContent').html(content)
+		$("#confirmDelBtn").unbind("click").click(function(e) {
+			var data = {
+				domainid: domainid,
+				domainname: domainname,
+				csrfToken: $('#csrfToken').text()
+			};
 
-            $.ajax({
-                url: '/ajax/domains/delete',
-                method: 'POST',
-                data: data
-            }).done(function(data) {
-                $('#confirmDomainDelete').modal('hide');
-                $(tablerowid).closest('tr').remove();
-				PNotify.success({title: 'Domain Deleted!', text: 'Your domain has been deleted.', type: 'success', icon: false, addclass: "stack_center", stack: stack_center })
-            }).fail(function(errorMsg) {
-				PNotify.error({title: 'Error!', text: errorMsg.responseText, type: 'error', icon: false , addclass: "stack_center", stack: stack_center });
-            });
-        });
-    });
+			$.ajax({
+				url: '/ajax/domains/delete',
+				method: 'POST',
+				data: data
+			}).done(function(data) {
+				$('#confirmDomainDelete').modal('hide');
+				$(tablerowid).closest('tr').remove();
+				PNotify.success({
+					title: 'Domain Deleted!',
+					text: 'Your domain has been deleted.',
+					type: 'success',
+					icon: false,
+					addclass: "stack_center",
+					stack: stack_center
+				})
+			}).fail(function(errorMsg) {
+				PNotify.error({
+					title: 'Error!',
+					text: errorMsg.responseText,
+					type: 'error',
+					icon: false,
+					addclass: "stack_center",
+					stack: stack_center
+				});
+			});
+		});
+	});
 });
 </script>
