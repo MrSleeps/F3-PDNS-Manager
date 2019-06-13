@@ -21,7 +21,7 @@ Pretty much everything, currently only part of the DNS Admin stuff works, it is 
 - [x] ~~Add Users~~
 - [x] ~~Edit Users~~
 - [x] ~~Delete Users~~
-- [ ] Assign Domain to different user
+- [x] ~~Assign Domain to different user~~
 
 #### Domain Admin
 - [ ] Add Domains
