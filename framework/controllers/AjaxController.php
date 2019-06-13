@@ -1029,6 +1029,10 @@ class AjaxController extends Controller
             }
             
             $updateduser = $users->updateUser($userid, $useremail, $userrole, $username, $maxdomains, $useractive, $usermasteraccount);
+			$this->f3->set('SESSION.masteraccountid', $usermasteraccount);
+			$this->f3->set('SESSION.adminlevel', userrole);
+			$this->f3->set('SESSION.adminleveldesc', $userlevel->getLevelDesc(userrole));
+			$this->f3->set('SESSION.maxdomains', $maxdomains);
             if ($updateduser !== false) {
                 http_response_code(200);
                 echo json_encode(array(
